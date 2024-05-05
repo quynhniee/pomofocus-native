@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Background from "../components/Background";
-import Header from "../components/Header";
+import Header from "../components/HeaderText";
 import TextInput from "../components/TextInput";
 import BackButton from "../components/BackButton";
 import { theme } from "../core/theme";

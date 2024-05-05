@@ -2,31 +2,15 @@ import React, { useState, useCallback } from "react";
 import TabsContext from "./Context";
 
 const settingDefault = require("./defaultSetting.json");
-const tabsDefault = require("./defaultTabs.json");
+const tabsDefault = require("./defaultTabs.json"); 
 
-const Provider = ({ children }) => {
+const SettingProvider = ({ children }) => {
 	const [setting, setSetting] = useState(settingDefault);
 	const [tabs, setTabs] = useState(tabsDefault);
 
 	const [currentThemeColor, setCurrentThemeColor] = useState(
 		tabs[0].themeColor
 	);
-
-	// useEffect(() => {
-	// 	getSetting()
-	// 		.then((res) => res.data)
-	// 		.then((data) => {
-	// 			if (data) setSetting(data);
-	// 		});
-	// }, []);
-
-	// useEffect(() => {
-	// 	getTabs()
-	// 		.then((res) => res.data)
-	// 		.then((data) => {
-	// 			if (data) setTabs(data);
-	// 		});
-	// }, []);
 
 	const updatePomodoro = useCallback(
 		(data) => setTabs([data, tabs[1], tabs[2]]),
@@ -60,4 +44,4 @@ const Provider = ({ children }) => {
 	);
 };
 
-export default Provider;
+export default SettingProvider;

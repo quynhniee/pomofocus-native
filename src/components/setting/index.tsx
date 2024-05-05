@@ -1,0 +1,208 @@
+import React, { useContext, useState, useCallback, useEffect } from "react";
+import { View, StyleSheet } from "react-native";
+import {
+  Switch,
+  Text as RNText,
+  Divider,
+  IconButton,
+  Button,
+} from "react-native-paper";
+import Context from "../../store/Context";
+// import { getSetting, getTabs, updateSetting, updateTabs } from "../../api";
+import TimerSetting from "./Timer";
+import TaskSetting from "./Task";
+import ThemeSetting from "./Theme";
+import Modal from "../Modal";
+import Stack from "../Stack";
+ 
+const SettingButton = () => {
+  const { setting, setSetting, tabs, setTabs } = useContext(Context);
+
+  const pomodoro = tabs[0],
+    shortBreak = tabs[1],
+    longBreak = tabs[2];
+  const [open, setOpen] = useState(false);
+  const [pomodoroMinute, setPomodoroMinute] = useState(pomodoro.minute);
+  const [shortBreakMinute, setShortBreakMinute] = useState(shortBreak.minute);
+  const [longBreakMinute, setLongBreakMinute] = useState(longBreak.minute);
+  const [autoStartBreak, setAutoStartBreak] = useState(setting.autoStartBreak);
+  const [autoStartPomodoro, setAutoStartPomodoro] = useState(
+    setting.autoStartPomodoro
+  );
+  const [longBreakInterval, setLongBreakInterval] = useState(
+    setting.longBreakInterval
+  );
+  const [autoSwitchTasks, setAutoSwitchTasks] = useState(
+    setting.autoSwitchTasks
+  );
+  const [alarmSound, setAlarmSound] = useState(setting.alarmSound);
+  const [alarmVolume, setAlarmVolume] = useState(setting.alarmVolume);
+  const [alarmSoundRepeat, setAlarmSoundRepeat] = useState(
+    setting.alarmSoundRepeat
+  );
+  const [tickingSound, setTickingSound] = useState(setting.tickingSound);
+  const [tickingVolume, setTickingVolume] = useState(setting.tickingVolume);
+  const getPomodoroMinute = useCallback((data) => setPomodoroMinute(data), []);
+  const getShortBreakMinute = useCallback(
+    (data) => setShortBreakMinute(data),
+    []
+  );
+  const getLongBreakMinute = useCallback(
+    (data) => setLongBreakMinute(data),
+    []
+  );
+  const toggleStartBreak = useCallback(
+    () => setAutoStartBreak(!autoStartBreak),
+    [autoStartBreak]
+  );
+  const toggleStartPomodoro = useCallback(
+    () => setAutoStartPomodoro(!autoStartPomodoro),
+    [autoStartPomodoro]
+  );
+  const getLongBreakInterval = useCallback(
+    () => setLongBreakInterval(longBreakInterval),
+    [longBreakInterval]
+  );
+  const toggleSwitchTasks = useCallback(
+    () => setAutoSwitchTasks(!autoSwitchTasks),
+    [autoSwitchTasks]
+  );
+
+  const openHandle = () => setOpen(true);
+  const closeHandle = () => setOpen(false);
+
+  const updateTabsStorage = () => {
+    const _tabs = [
+      { ...pomodoro, minute: pomodoroMinute },
+      { ...shortBreak, minute: shortBreakMinute },
+      { ...longBreak, minute: longBreakMinute },
+    ];
+    setTabs(_tabs);
+    // updateTabs(_tabs);
+  };
+
+  const updateSettingStorage = () => {
+    const _setting = {
+      autoStartBreak,
+      autoStartPomodoro,
+      longBreakInterval,
+      autoSwitchTasks,
+      alarmSound,
+      alarmVolume,
+      alarmSoundRepeat,
+      tickingSound,
+      tickingVolume,
+    };
+    setSetting(_setting);
+    // updateSetting(_setting);
+  };
+
+  const saveHandle = () => {
+    updateTabsStorage();
+    updateSettingStorage();
+    setOpen(false);
+  };
+
+
+	useEffect(() => {
+		// getSetting()
+		// 	.then((resp) => resp.data)
+		// 	.then((data) => {
+		// 		setSetting(data);
+		// 	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		// getTabs()
+		// 	.then((res) => res.data)
+		// 	.then((data) => {
+		// 		setTabs(data);
+		// 	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		setAutoStartBreak(setting.autoStartBreak);
+		setAutoStartPomodoro(setting.autoStartPomodoro);
+		setPomodoroMinute(pomodoro.minute);
+		setLongBreakMinute(longBreak.minute);
+		setShortBreakMinute(shortBreak.minute);
+		setAutoSwitchTasks(setting.autoSwitchTasks);
+		setLongBreakInterval(setting.longBreakInterval);
+		setAlarmSound(setting.alarmSound);
+		setAlarmVolume(setting.alarmVolume);
+		setAlarmSoundRepeat(setting.alarmSoundRepeat);
+		setTickingSound(setting.tickingSound);
+		setTickingVolume(setting.tickingVolume);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [setting]);
+
+  return (
+    <>
+      <IconButton icon="cog" iconColor="white" onPress={openHandle} />
+      <View style={styles.container}>
+        <Modal open={open} onClose={closeHandle}>
+          <View style={styles.row}>
+            <RNText style={styles.boldText}>Setting</RNText>
+            <IconButton icon="close" onPress={closeHandle} />
+          </View>
+          <Divider />
+          <View style={styles.settings}>
+            <Stack>
+              <TimerSetting
+                getPomodoroMinute={getPomodoroMinute}
+                getShortBreakMinute={getShortBreakMinute}
+                getLongBreakMinute={getLongBreakMinute}
+                toggleStartBreak={toggleStartBreak}
+                toggleStartPomodoro={toggleStartPomodoro}
+                getLongBreakInterval={getLongBreakInterval}
+                longBreakInterval={longBreakInterval}
+                autoStartBreak={autoStartBreak}
+                autoStartPomodoro={autoStartPomodoro}
+              />
+              <Divider />
+              <TaskSetting
+                autoSwitchTasks={autoSwitchTasks}
+                toggleSwitchTasks={toggleSwitchTasks}
+              />
+              <Divider />
+              {/* <SoundSetting
+      // ... pass all your props here ...
+    /> */}
+              {/* <Divider /> */}
+              <ThemeSetting />
+            </Stack>
+          </View>
+          <View style={styles.footer}>
+            <Button onPress={saveHandle} mode="contained-tonal">
+              Save
+            </Button>
+          </View>
+        </Modal>
+      </View>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+  },
+  boldText: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  settings: {
+    padding: 15,
+  },
+  footer: {},
+});
+
+export default SettingButton;

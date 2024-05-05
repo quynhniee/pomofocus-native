@@ -1,13 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native';
-import LoginScreen from './src/views/LoginScreen';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { theme } from './src/core/theme';
 import AppMain from './src/'
-export default function App() {
+import { Provider } from 'react-redux';
+import store from './src/redux/auth';
+import SettingProvider from './src/store/Provider';
+
+export default function App() { 
+
   return (
-    <PaperProvider theme={theme}>
-      <AppMain/>
-    </PaperProvider>
+    <Provider store={store}>
+      <SettingProvider>
+        <PaperProvider theme={theme}>
+          <AppMain/>
+        </PaperProvider>
+      </SettingProvider>
+    </Provider>
   );
 }
 

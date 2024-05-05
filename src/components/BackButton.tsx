@@ -10,7 +10,7 @@ type Props = {
 
 const BackButton = ({ goBack }: Props) => (
   <TouchableOpacity onPress={goBack} style={styles.container}>
-    <Icon source='arrow-left' size={30} color={theme.colors.primary} />
+    <Icon source='arrow-left' size={20} color={theme.colors.primary} />
   </TouchableOpacity>
 );
 

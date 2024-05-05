@@ -24,6 +24,7 @@ const Stack = ({children,...props}: StackProps) => {
     width: props.width,
     columnGap: props.columnGap,
     rowGap: props.rowGap,
+    flexWrap: 'wrap'
   }
   
   return (

@@ -1,10 +1,10 @@
-import React, { useContext, useState, memo, useCallback } from "react";
+import React, { useContext, useState, memo, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authAction } from "../redux/auth/auth";
 import { Button, Text, TextInput as PaperInput } from "react-native-paper";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Background from "../components/Background";
-import Header from "../components/Header";
+import Header from "../components/HeaderText";
 import Stack from "../components/Stack";
 import { Navigation } from "../core/types";
 import { theme } from "../core/theme";
@@ -51,6 +51,9 @@ const LoginScreen = ({ navigation }: Props) => {
     }
   };
 
+  useEffect(() => {
+
+  }, [])
 
   return (
     <Background>
