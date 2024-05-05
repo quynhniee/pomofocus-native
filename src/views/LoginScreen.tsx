@@ -11,19 +11,20 @@ import { theme } from "../core/theme";
 import TextInput from "../components/TextInput";
 import { emailValidator, passwordValidator } from "../hooks/validator";
 import { useFocusEffect } from "@react-navigation/native";
+import { login, setHeader } from '../api';
 
 type Props = { 
   navigation: Navigation;
 };
 
 const LoginScreen = ({ navigation }: Props) => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
-  const _onLoginPressed = () => {
+  const _onLoginPressed = async () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
@@ -31,25 +32,24 @@ const LoginScreen = ({ navigation }: Props) => {
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
       return;
-    }
-
-    navigation.navigate('Dashboard');
-  };
-  const submitHandle = async (e) => {
-    e.preventDefault();
+    } 
 
     try {
-      // const response = await login({ email, password });
-      // if (response.status === 200) {
-      // 	setHeader(response.data.token);
-      // 	dispatch(authAction.login());
-      // } else {
-      // 	helperText.current.textContent = response.data.message;
-      // }
+      const response = await login({ email: email.value, password: password.value });
+      console.log(response)
+      if (response.status === 200) {
+      	setHeader(response.data.token);
+      	dispatch(authAction.login()); 
+        console.log(response.data.token)
+        // navigation.navigate('HomeScreen'); 
+      } else {
+      	// helperText.current.textContent = response.data.message;
+      }
     } catch (error) {
       console.log(error);
     }
   };
+ 
 
   useEffect(() => {
 
@@ -70,6 +70,7 @@ const LoginScreen = ({ navigation }: Props) => {
           autoCapitalize="none"
           textContentType="emailAddress"
           keyboardType="email-address"
+          autoComplete='email'
         />
         <TextInput
           label="Password"
@@ -77,6 +78,7 @@ const LoginScreen = ({ navigation }: Props) => {
           onChangeText={text => setPassword({ value: text, error: '' })}
           error={!!password.error}
           errorText={password.error}
+          autoComplete='password'
           mode="flat"
           secureTextEntry={!showPassword}
           returnKeyType="done"
@@ -94,7 +96,7 @@ const LoginScreen = ({ navigation }: Props) => {
             <Text style={styles.label}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
-        <Stack alignBlock="center">
+        <Stack alignBlock="center" flexDirection='column' alignInline='center'>
           <Button mode="contained" onPress={_onLoginPressed}>Login</Button>
           <View style={styles.row}> 
             <Text style={styles.label}>Don’t have an account? </Text>

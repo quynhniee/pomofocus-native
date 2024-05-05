@@ -11,6 +11,7 @@ interface StackProps {
   width?: FlexStyle['width']
   columnGap?: FlexStyle['columnGap']
   rowGap?: FlexStyle['rowGap']
+  flexWrap?: FlexStyle['flexWrap']
 }
 
 
@@ -21,10 +22,11 @@ const Stack = ({children,...props}: StackProps) => {
     justifyContent: props.alignInline,
     flexDirection: props.flexDirection,
     gap: props.gap,
-    width: props.width,
     columnGap: props.columnGap,
     rowGap: props.rowGap,
-    flexWrap: 'wrap'
+    flexWrap: props.flexWrap,
+    flexGrow: 1,
+    // width: props.width,
   }
   
   return (
@@ -41,8 +43,8 @@ Stack.defaultProps = {
   direction: 'ltr',
   alignInline: 'flex-start',
   alignBlock: 'stretch',
-  width: '100%',
-  rowGap: 10
+  rowGap: 10,
+  flexGrow: 1, 
 };
 
 

@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
-// import { updateTask } from '../../api';
 import Context from "../../store/Context";
 import SkipButton from "./SkipButton";
 import Tab from "./Tab";
@@ -15,6 +14,7 @@ import TimerButton from "./TimerButton";
 import CountDown from "./Countdown";
 import Sound from "react-native-sound";
 import Stack from "../Stack";
+import { updateTask } from '../../api';
 
 const CountDownBox = ({
   counter,
@@ -52,7 +52,7 @@ const CountDownBox = ({
 
   function updateItemAct() {
     let newItem = { ...activeItem, act: activeItem.act + 1 };
-    // updateTask(activeItem.id, newItem);
+    updateTask(activeItem.id, newItem);
     let newTasks = tasks.map((task) =>
       task.id === activeItem.id ? newItem : task
     );

@@ -44,12 +44,16 @@ const styles = StyleSheet.create({
     width: 120,
     backgroundColor: "#ebebeb",
     transform: [{ translateY: 0 }],
+    height: 40,
+    borderRadius: 5,
   },
   button: {
     position: 'absolute',
     backgroundColor: "white",
     width: 120,
     zIndex: 3,
+    height: 40,
+    borderRadius: 5,
     // transition: "0.2s all ease",
   },
   text: {

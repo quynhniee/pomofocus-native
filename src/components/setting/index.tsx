@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import {
   Switch,
   Text as RNText,
@@ -8,14 +8,16 @@ import {
   Button,
 } from "react-native-paper";
 import Context from "../../store/Context";
-// import { getSetting, getTabs, updateSetting, updateTabs } from "../../api";
+import { getSetting, getTabs, updateSetting, updateTabs } from "../../api";
 import TimerSetting from "./Timer";
 import TaskSetting from "./Task";
 import ThemeSetting from "./Theme";
 import Modal from "../Modal";
 import Stack from "../Stack";
+import useSnackbar from '../../hooks/useSnackbar';
  
 const SettingButton = () => {
+  const {showSnackbar} = useSnackbar()
   const { setting, setSetting, tabs, setTabs } = useContext(Context);
 
   const pomodoro = tabs[0],
@@ -78,7 +80,7 @@ const SettingButton = () => {
       { ...longBreak, minute: longBreakMinute },
     ];
     setTabs(_tabs);
-    // updateTabs(_tabs);
+    updateTabs(_tabs);
   };
 
   const updateSettingStorage = () => {
@@ -94,10 +96,11 @@ const SettingButton = () => {
       tickingVolume,
     };
     setSetting(_setting);
-    // updateSetting(_setting);
+    updateSetting(_setting);
   };
 
   const saveHandle = () => {
+    showSnackbar('Settings saved')
     updateTabsStorage();
     updateSettingStorage();
     setOpen(false);
@@ -105,20 +108,22 @@ const SettingButton = () => {
 
 
 	useEffect(() => {
-		// getSetting()
-		// 	.then((resp) => resp.data)
-		// 	.then((data) => {
-		// 		setSetting(data);
-		// 	});
+		getSetting()
+			.then((resp) => resp?.data)
+			.then((data) => {
+        if (data)
+				  setSetting(data);
+			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		// getTabs()
-		// 	.then((res) => res.data)
-		// 	.then((data) => {
-		// 		setTabs(data);
-		// 	});
+		getTabs()
+			.then((res) => res?.data)
+			.then((data) => {
+        if (data)
+				  setTabs(data);
+			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -148,6 +153,7 @@ const SettingButton = () => {
             <IconButton icon="close" onPress={closeHandle} />
           </View>
           <Divider />
+
           <View style={styles.settings}>
             <Stack>
               <TimerSetting
@@ -174,10 +180,13 @@ const SettingButton = () => {
               <ThemeSetting />
             </Stack>
           </View>
-          <View style={styles.footer}>
+          <View>
+
+          <Stack alignInline='center' flexDirection='row' alignBlock='center'  >
             <Button onPress={saveHandle} mode="contained-tonal">
               Save
             </Button>
+          </Stack>
           </View>
         </Modal>
       </View>
@@ -202,7 +211,8 @@ const styles = StyleSheet.create({
   settings: {
     padding: 15,
   },
-  footer: {},
+  footer: {
+  },
 });
 
 export default SettingButton;

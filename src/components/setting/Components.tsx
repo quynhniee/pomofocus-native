@@ -35,7 +35,7 @@ const ThemeModal = ({ tab, updateTab }) => {
         onPress={openHandle}
       > </Button>
       <Modal open={open} onClose={closeHandle}>
-        <View style={styles.stack}>
+        <View style={{...styles.stack, marginTop: 20}}>
           <TextStyled> Pick a color for {tab.name} </TextStyled>
         </View>
         <Palette tab={tab} updateTab={updateTab} closeHandle={closeHandle} />
@@ -48,9 +48,7 @@ const styles = StyleSheet.create({
   stack: {
     flexDirection: 'column',
     textAlign: 'center',
-    marginTop: 20,
     marginBottom: 10,
-    marginLeft: 10,
   },
   listItem: {
     flexDirection: 'row',

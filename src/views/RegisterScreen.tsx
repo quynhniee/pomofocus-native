@@ -13,6 +13,7 @@ import {
   passwordValidator,
 } from "../hooks/validator";
 import Stack from "../components/Stack";
+import { signup } from '../api';
 
 type Props = {
   navigation: Navigation;
@@ -24,7 +25,7 @@ const RegisterScreen = ({ navigation }: Props) => {
   const [password, setPassword] = useState({ value: "", error: "" });
   const [showPassword, setShowPassword] = useState(false);
 
-  const _onSignUpPressed = () => {
+  const _onSignUpPressed = async () => {
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
@@ -36,7 +37,13 @@ const RegisterScreen = ({ navigation }: Props) => {
       return;
     }
 
-    navigation.navigate("Dashboard");
+    const response = await signup({ name, email, password });
+    if (response.status === 200) {
+      navigation.navigate("Dashboard");
+    } else {
+      // helperText.current.textContent = response.data.message;
+    }
+
   };
 
   return (

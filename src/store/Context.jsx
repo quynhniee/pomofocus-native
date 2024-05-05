@@ -33,7 +33,7 @@ const Context = createContext({
 		"autoStartPomodoro": false,
 		"longBreakInterval": 4,
 		"autoSwitchTasks": false,
-		// "alarmSound": "/pomofocus-/static/media/dog-sound.68a11d6805471469a5ea.wav",
+		"alarmSound": "/pomofocus-/static/media/dog-sound.68a11d6805471469a5ea.wav",
 		"alarmVolume": 0.5,
 		"alarmSoundRepeat": 1,
 		"tickingSound": "none",
