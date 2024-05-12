@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import SkipButton from './SkipButton';
 
-const TimerButton = ({ themeColor, getActive, active }) => {
+const TimerButton = ({ themeColor, getActive, active, changeTab }) => {
   const clickHandle = () => {
     getActive(!active); 
   };
@@ -24,8 +24,7 @@ const TimerButton = ({ themeColor, getActive, active }) => {
           {active === false ? "Start" : "Pause"}
         </Text>
       </Button>
-      {active === true ? <SkipButton style={styles.skipButton} onClick={() => {}} /> : null}
-
+      {active === true ? <SkipButton style={styles.skipButton} onClick={changeTab} /> : null}
     </View>
   );
 };

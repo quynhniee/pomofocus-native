@@ -5,21 +5,23 @@ import Header from "../components/HeaderText";
 import TextInput from "../components/TextInput";
 import BackButton from "../components/BackButton";
 import { theme } from "../core/theme";
-import { Button, TextInput as PaperInput } from "react-native-paper";
+import { Button, TextInput as PaperInput, Snackbar } from "react-native-paper";
 import { Navigation } from "../core/types";
 import {
   emailValidator,
   nameValidator,
   passwordValidator,
-} from "../hooks/validator";
+} from "../utils/validator";
 import Stack from "../components/Stack";
-import { signup } from '../api';
+import { signup } from "../api";
+import useSnackbar from "../hooks/useSnackbar";
 
 type Props = {
   navigation: Navigation;
 };
 
 const RegisterScreen = ({ navigation }: Props) => {
+  const { showSnackbar, visible, message, hideSnackbar } = useSnackbar();
   const [name, setName] = useState({ value: "", error: "" });
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
@@ -37,80 +39,94 @@ const RegisterScreen = ({ navigation }: Props) => {
       return;
     }
 
-    const response = await signup({ name, email, password });
+    const response = await signup({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    });
     if (response.status === 200) {
-      navigation.navigate("Dashboard");
+      showSnackbar("Account created successfully!");
+      setTimeout(() => {
+      navigation.navigate("LoginScreen");
+      },  2000);
     } else {
-      // helperText.current.textContent = response.data.message;
+      showSnackbar(response.data.message);
     }
-
   };
 
   return (
-    <Background>
-      <View style={{ height: "15%" }} />
-      <BackButton goBack={() => navigation.navigate("LoginScreen")} />
+    <>
+      <Snackbar
+        duration={Snackbar.DURATION_SHORT}
+        onDismiss={hideSnackbar}
+        visible={visible}
+      >
+        {message}
+      </Snackbar>
+      <Background>
+        <View style={{ height: "15%" }} />
+        <BackButton goBack={() => navigation.navigate("LoginScreen")} />
+        <Header>Create Account</Header>
 
-      {/* <Logo /> */}
+        <TextInput
+          label="Name"
+          returnKeyType="next"
+          value={name.value}
+          onChangeText={(text) => setName({ value: text, error: "" })}
+          error={!!name.error}
+          errorText={name.error}
+          mode="flat"
+        />
 
-      <Header>Create Account</Header>
+        <TextInput
+          label="Email"
+          returnKeyType="next"
+          value={email.value}
+          onChangeText={(text) => setEmail({ value: text, error: "" })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          mode="flat"
+        />
+        <TextInput
+          label="Password"
+          returnKeyType="done"
+          value={password.value}
+          onChangeText={(text) => setPassword({ value: text, error: "" })}
+          error={!!password.error}
+          errorText={password.error}
+          secureTextEntry={!showPassword}
+          mode="flat"
+          right={
+            <PaperInput.Icon
+              icon={showPassword ? "eye" : "eye-off"}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          }
+        />
 
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={name.value}
-        onChangeText={(text) => setName({ value: text, error: "" })}
-        error={!!name.error}
-        errorText={name.error}
-        mode="flat"
-      />
+        <Stack alignBlock="center">
+          <Button
+            mode="contained"
+            onPress={_onSignUpPressed}
+            style={styles.button}
+          >
+            Sign Up
+          </Button>
 
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: "" })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        mode="flat"
-      />
-      <TextInput
-        label="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: "" })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry={!showPassword}
-        mode="flat"
-        right={
-          <PaperInput.Icon
-            icon={showPassword ? "eye" : "eye-off"}
-            onPress={() => setShowPassword(!showPassword)}
-          />
-        }
-      />
-
-      <Stack alignBlock="center">
-        <Button
-          mode="contained"
-          onPress={_onSignUpPressed}
-          style={styles.button}
-        >
-          Sign Up
-        </Button>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
-            <Text style={styles.link}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      </Stack>
-    </Background>
+          <View style={styles.row}>
+            <Text style={styles.label}>Already have an account? </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("LoginScreen")}
+            >
+              <Text style={styles.link}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </Stack>
+      </Background>
+    </>
   );
 };
 

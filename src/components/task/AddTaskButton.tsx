@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#0000002b",
     borderColor: "white",
     borderWidth: 2,
-    paddingVertical: 10,
     opacity: 0.6,
   },
   content: {
@@ -24,6 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
+    paddingVertical: 10,
     textTransform: "capitalize",
     fontWeight: "bold",
     fontSize: 15,

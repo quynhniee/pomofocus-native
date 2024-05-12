@@ -12,9 +12,9 @@ import SkipButton from "./SkipButton";
 import Tab from "./Tab";
 import TimerButton from "./TimerButton";
 import CountDown from "./Countdown";
-import Sound from "react-native-sound";
 import Stack from "../Stack";
-import { updateTask } from '../../api';
+import { updateTask } from "../../api";
+import { Audio } from "expo-av";
 
 const CountDownBox = ({
   counter,
@@ -33,11 +33,6 @@ const CountDownBox = ({
     autoStartPomodoro,
     autoSwitchTasks,
     longBreakInterval,
-    tickingSound,
-    tickingVolume,
-    alarmSound,
-    alarmVolume,
-    alarmSoundRepeat,
   } = setting;
 
   const [active, setActive] = useState(
@@ -45,6 +40,15 @@ const CountDownBox = ({
   );
   const [minute, setMinute] = useState(tabs[activeTab].minute);
   const [second, setSecond] = useState(tabs[activeTab].second);
+  const [alarm, setAlarm] = useState(null);
+  async function playSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../assets/alarms/clock-alarm-8761.mp3")
+    );
+    setAlarm(sound);
+    await sound.playAsync();
+  }
 
   const getActive = useCallback((data) => {
     setActive(data);
@@ -84,6 +88,8 @@ const CountDownBox = ({
       getActive(autoStartBreak);
       increaseCounter();
       getTasks(updateItemAct());
+      // playAlarm();
+      playSound();
       if ((counter + 1) % longBreakInterval === 0) {
         getActiveTab(2);
         setTabs(
@@ -120,21 +126,36 @@ const CountDownBox = ({
     setCurrentThemeColor(tabs[activeTab].themeColor);
   }, [activeTab, tabs, setCurrentThemeColor]);
 
-  function play(audio, times) {
-    if (times <= 0) {
-      return;
+  // function play(audio, times) {
+  //   if (times <= 0) {
+  //     return;
+  //   }
+  //   var played = 0;
+  //   audio.addEventListener("ended", function () {
+  //     played++;
+  //     if (played < times) {
+  //       audio.play();
+  //     } else {
+  //       return;
+  //     }
+  //   });
+  //   audio.play();
+  // }
+
+  useEffect(() => {
+    return alarm
+      ? () => {
+          console.log("Unloading Sound");
+          alarm.unloadAsync();
+        }
+      : undefined;
+  }, [alarm]);
+
+  useEffect(() => {
+    if (minute === 0 && second === 0) {
+      playSound();
     }
-    var played = 0;
-    audio.addEventListener("ended", function () {
-      played++;
-      if (played < times) {
-        audio.play();
-      } else {
-        return;
-      }
-    });
-    audio.play();
-  }
+  }, [minute, second]);
 
   useEffect(() => {
     const timerInterval =
@@ -148,6 +169,7 @@ const CountDownBox = ({
               } else {
                 clearInterval(timerInterval);
                 changeTab();
+                console.log("testt");
               }
             }
           }, 1000)
@@ -163,8 +185,8 @@ const CountDownBox = ({
         themeColor={currentThemeColor}
         getActive={getActive}
         active={active}
+        changeTab={changeTab}
       />
-      {/* {active === true ? <SkipButton onClick={() => {}} /> : null} */}
     </View>
   );
 };
@@ -177,6 +199,11 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     alignItems: "center",
     position: "relative",
+  },
+  skipButton: {
+    // position: 'absolute',
+    // bottom: -35,
+    // right: -140,
   },
 });
 

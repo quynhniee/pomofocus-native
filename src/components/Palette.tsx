@@ -25,7 +25,7 @@ const Palette = ({ tab, updateTab, closeHandle }) => {
   };
 
   return (
-    <Stack flexDirection='row' rowGap={15} alignInline='space-evenly'> 
+    <Stack flexDirection='row' rowGap={15} flexWrap='wrap' alignInline='space-evenly'> 
       {colors.map(c => (
         <TouchableOpacity
           key={c}

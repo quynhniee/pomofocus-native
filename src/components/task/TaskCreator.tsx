@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { Button, Card, TextInput } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity, Text as RNText, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import useOnClickOutside from '../../hooks/clickOutside';
 import EstPomodoros from './EstPomodoros';
 import Stack from '../Stack';
 import { addTask, deleteTask, updateTask } from '../../api';

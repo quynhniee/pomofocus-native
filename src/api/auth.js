@@ -8,15 +8,13 @@ export const setHeader = (token) => {
 
 export const login = async (value) => {
 	try {
-		console.log(axios.defaults.baseURL)
-
 		const response = await axios.post("auth/login", value);
 		await storeItem("token", response.data.token);
 		return response;
 	} catch (error) {
 		return error.response;
 	}
-};
+}; 
 
 // Get user information
 export const getUser = async () => {

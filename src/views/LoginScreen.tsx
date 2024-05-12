@@ -1,7 +1,18 @@
-import React, { useContext, useState, memo, useCallback, useEffect } from "react";
+import React, {
+  useContext,
+  useState,
+  memo,
+  useCallback,
+  useEffect,
+} from "react";
 import { useDispatch } from "react-redux";
 import { authAction } from "../redux/auth/auth";
-import { Button, Text, TextInput as PaperInput } from "react-native-paper";
+import {
+  Button,
+  Text,
+  TextInput as PaperInput,
+  Snackbar,
+} from "react-native-paper";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Background from "../components/Background";
 import Header from "../components/HeaderText";
@@ -9,20 +20,22 @@ import Stack from "../components/Stack";
 import { Navigation } from "../core/types";
 import { theme } from "../core/theme";
 import TextInput from "../components/TextInput";
-import { emailValidator, passwordValidator } from "../hooks/validator";
+import { emailValidator, passwordValidator } from "../utils/validator";
 import { useFocusEffect } from "@react-navigation/native";
-import { login, setHeader } from '../api';
+import { login, setHeader } from "../api";
+import  useSnackbar from '../hooks/useSnackbar';
 
-type Props = { 
+type Props = {
   navigation: Navigation;
 };
 
-const LoginScreen = ({ navigation }: Props) => {
+const LoginScreen = ({ navigation }: Props) => { 
+  const { showSnackbar, visible, message, hideSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
 
   const _onLoginPressed = async () => {
     const emailError = emailValidator(email.value);
@@ -32,37 +45,44 @@ const LoginScreen = ({ navigation }: Props) => {
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
       return;
-    } 
+    }
 
     try {
-      const response = await login({ email: email.value, password: password.value });
-      console.log(response)
+      const response = await login({
+        email: email.value,
+        password: password.value,
+      });
+
       if (response.status === 200) {
-      	setHeader(response.data.token);
-      	dispatch(authAction.login()); 
-        console.log(response.data.token)
-        // navigation.navigate('HomeScreen'); 
+        setHeader(response.data.token);
+        dispatch(authAction.login());
+        // navigation.navigate('HomeScreen');
       } else {
-      	// helperText.current.textContent = response.data.message;
+        showSnackbar(response.data.message);
       }
     } catch (error) {
       console.log(error);
     }
   };
- 
 
-  useEffect(() => {
-
-  }, [])
+  useEffect(() => {}, []);
 
   return (
-    <Background>
-      <View style={{height: '15%'}}/>
-      <Header>Welcome back</Header>
+    <>
+      <Snackbar
+        duration={Snackbar.DURATION_SHORT}
+        onDismiss={hideSnackbar}
+        visible={visible}
+      >
+        {message}
+      </Snackbar>
+      <Background>
+        <View style={{ height: "15%" }} />
+        <Header>Welcome back</Header>
         <TextInput
           label="Email"
           value={email.value}
-          onChangeText={text => setEmail({ value: text, error: '' })}
+          onChangeText={(text) => setEmail({ value: text, error: "" })}
           error={!!email.error}
           errorText={email.error}
           placeholder="example@mail.com"
@@ -70,15 +90,15 @@ const LoginScreen = ({ navigation }: Props) => {
           autoCapitalize="none"
           textContentType="emailAddress"
           keyboardType="email-address"
-          autoComplete='email'
+          autoComplete="email"
         />
         <TextInput
           label="Password"
           value={password.value}
-          onChangeText={text => setPassword({ value: text, error: '' })}
+          onChangeText={(text) => setPassword({ value: text, error: "" })}
           error={!!password.error}
           errorText={password.error}
-          autoComplete='password'
+          autoComplete="password"
           mode="flat"
           secureTextEntry={!showPassword}
           returnKeyType="done"
@@ -96,16 +116,22 @@ const LoginScreen = ({ navigation }: Props) => {
             <Text style={styles.label}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
-        <Stack alignBlock="center" flexDirection='column' alignInline='center'>
-          <Button mode="contained" onPress={_onLoginPressed}>Login</Button>
-          <View style={styles.row}> 
+        
+        <Stack alignBlock="center" flexDirection="column">
+          <Button mode="contained" onPress={_onLoginPressed}>
+            Login
+          </Button>
+          <View style={styles.row}>
             <Text style={styles.label}>Don’t have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("RegisterScreen")}
+            >
               <Text style={styles.link}>Sign up</Text>
             </TouchableOpacity>
           </View>
         </Stack>
-    </Background>
+      </Background>
+    </>
   );
 };
 
@@ -130,4 +156,3 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
 });
-

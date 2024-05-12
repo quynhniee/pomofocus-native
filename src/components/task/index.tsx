@@ -20,6 +20,7 @@ const TasksList = ({ tasks, getTasks }) => {
       </View>
       <Divider />
       <FlatList
+        scrollEnabled={false}
         data={tasks}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item: task }) => (

@@ -6,6 +6,7 @@ import {
   Divider,
   IconButton,
   Button,
+  Snackbar,
 } from "react-native-paper";
 import Context from "../../store/Context";
 import { getSetting, getTabs, updateSetting, updateTabs } from "../../api";
@@ -17,7 +18,7 @@ import Stack from "../Stack";
 import useSnackbar from '../../hooks/useSnackbar';
  
 const SettingButton = () => {
-  const {showSnackbar} = useSnackbar()
+  const {showSnackbar, hideSnackbar, message, visible} = useSnackbar()
   const { setting, setSetting, tabs, setTabs } = useContext(Context);
 
   const pomodoro = tabs[0],
@@ -100,10 +101,10 @@ const SettingButton = () => {
   };
 
   const saveHandle = () => {
-    showSnackbar('Settings saved')
     updateTabsStorage();
     updateSettingStorage();
     setOpen(false);
+    showSnackbar('Settings saved!')
   };
 
 
@@ -173,10 +174,7 @@ const SettingButton = () => {
                 toggleSwitchTasks={toggleSwitchTasks}
               />
               <Divider />
-              {/* <SoundSetting
-      // ... pass all your props here ...
-    /> */}
-              {/* <Divider /> */}
+              
               <ThemeSetting />
             </Stack>
           </View>
@@ -190,6 +188,14 @@ const SettingButton = () => {
           </View>
         </Modal>
       </View>
+        <Snackbar
+        style={{zIndex: 1000}}
+          duration={Snackbar.DURATION_SHORT}
+          onDismiss={hideSnackbar}
+          visible={visible}
+        >
+          {message}
+        </Snackbar>
     </>
   );
 };
