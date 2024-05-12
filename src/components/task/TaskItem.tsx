@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { List, IconButton, Text } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity, Text as RNText } from 'react-native';
-import TaskExpandButton from './TaskExpandButton';
 import TaskCreator from './TaskCreator';
 import Stack from '../Stack';
 
@@ -21,7 +20,7 @@ const TaskItem = ({ tasks, getTasks, task, children }) => {
     <>
       {expand === false ? (
         <TouchableOpacity style={styles.listItem} onPress={clickHandle}>
-          <Stack flexDirection='row'>
+          <Stack flexDirection='row' borderLeftWidth={task.isActive ? 2 : 0}>
             <Stack flexDirection='row' alignInline='space-between' alignBlock='center'>
               {children}
             </Stack>

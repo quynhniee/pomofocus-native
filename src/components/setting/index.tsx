@@ -63,8 +63,8 @@ const SettingButton = () => {
     [autoStartPomodoro]
   );
   const getLongBreakInterval = useCallback(
-    () => setLongBreakInterval(longBreakInterval),
-    [longBreakInterval]
+    (data) => setLongBreakInterval(data),
+    []
   );
   const toggleSwitchTasks = useCallback(
     () => setAutoSwitchTasks(!autoSwitchTasks),

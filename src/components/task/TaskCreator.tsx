@@ -26,7 +26,7 @@ const TaskCreator = ({ getExpand, task, tasks, getTasks }) => {
     },
     [taskUpdate]
   );
-  const saveHandle = () => {
+  const saveHandle = async () => {
     const newTask = { ...taskUpdate, content: content };
     if (newTask.content.trim() === '') return;
     if (task) {
@@ -34,13 +34,13 @@ const TaskCreator = ({ getExpand, task, tasks, getTasks }) => {
         updateTask(task.id, newTask);
     } else {
       getTasks(tasks.concat([newTask]));
-      addTask({ ...newTask });
+      await addTask({ ...newTask });
     }
     getExpand(false);
   };
-  const removeHandle = () => {
+  const removeHandle =  async () => {
     getTasks(tasks.filter((t) => t.id !== task.id));
-    deleteTask(task.id);
+    await deleteTask(task.id);
   };
   return (
     <TouchableWithoutFeedback onPress={() => getExpand(false)} accessible={false}>

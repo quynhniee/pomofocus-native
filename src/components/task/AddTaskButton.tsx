@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 2,
     opacity: 0.6,
+    marginBottom: 40
   },
   content: {
     height: "100%",

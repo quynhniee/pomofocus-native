@@ -12,6 +12,7 @@ interface StackProps {
   columnGap?: FlexStyle['columnGap']
   rowGap?: FlexStyle['rowGap']
   flexWrap?: FlexStyle['flexWrap']
+  borderLeftWidth?: FlexStyle['borderLeftWidth']
 }
 
 
@@ -26,6 +27,8 @@ const Stack = ({children,...props}: StackProps) => {
     rowGap: props.rowGap,
     flexWrap: props.flexWrap,
     flexGrow: 1,
+    borderLeftWidth: props.borderLeftWidth,
+    borderLeftColor: '#000',
     // width: props.width,
   }
   
