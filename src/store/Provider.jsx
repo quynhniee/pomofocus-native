@@ -7,9 +7,11 @@ const tabsDefault = require("./defaultTabs.json");
 const SettingProvider = ({ children }) => {
 	const [setting, setSetting] = useState(settingDefault);
 	const [tabs, setTabs] = useState(tabsDefault);
+	const [currentTask, setCurrentTask] = useState()
+	const [isStarting, setIsStarting] = useState(false);
 
 	const [currentThemeColor, setCurrentThemeColor] = useState(
-		tabs[0].themeColor
+		tabs.find(tab => tab.isActive === true).themeColor
 	);
 
 	const updatePomodoro = useCallback(
@@ -37,6 +39,10 @@ const SettingProvider = ({ children }) => {
 				updateLongBreak,
 				updatePomodoro,
 				updateShortBreak,
+				currentTask,
+				setCurrentTask,
+				isStarting,
+				setIsStarting
 			}}
 		>
 			{children}

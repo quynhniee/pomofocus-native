@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Text, useTheme } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 import Context from '../../store/Context';
+import { updateTabs } from '../../api';
 
 const Tab = ({ getActiveTab, getActive }) => {
   const { tabs, setTabs } = useContext(Context);
@@ -13,15 +14,17 @@ const Tab = ({ getActiveTab, getActive }) => {
         <Button
           key={index}
           buttonColor={value.isActive ? colors.primary : colors.background}
-          onPress={() => {
+          onPress={async() => {
             getActiveTab(index);
-            setTabs(
-              tabs.map((tab, i) =>
+            const newTabs =  tabs.map((tab, i) =>
                 i === index
                   ? { ...tab, isActive: true }
                   : { ...tab, isActive: false }
               )
+            setTabs(
+             newTabs
             );
+            await updateTabs(newTabs);
             getActive(false);
           }}
           style={{

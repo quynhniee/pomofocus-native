@@ -43,6 +43,10 @@ const Context = createContext({
 	updateLongBreak: (any) => {},
 	updatePomodoro: (any) => {},
 	updateShortBreak: (any) => {},
+	currentTask: {},
+	setCurrentTask: (any) => {},
+	isStarting: false,
+	setIsStarting: (any) => {}
 });
 
 export default Context;

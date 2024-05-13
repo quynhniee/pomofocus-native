@@ -6,13 +6,10 @@ import React, {
   useRef,
 } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Text, useTheme } from "react-native-paper";
 import Context from "../../store/Context";
-import SkipButton from "./SkipButton";
 import Tab from "./Tab";
 import TimerButton from "./TimerButton";
 import CountDown from "./Countdown";
-import Stack from "../Stack";
 import { updateTask } from "../../api";
 import { Audio } from "expo-av";
 
@@ -25,7 +22,7 @@ const CountDownBox = ({
   tasks,
   getTasks,
 }) => {
-  const { tabs, setTabs, setting, currentThemeColor, setCurrentThemeColor } =
+  const { tabs, setTabs, setting, currentThemeColor, setCurrentThemeColor, setIsStarting, setCurrentTask } =
     useContext(Context);
 
   const {
@@ -120,27 +117,14 @@ const CountDownBox = ({
     }
   }
 
+
   useEffect(() => {
     setMinute(tabs[activeTab].minute);
     setSecond(tabs[activeTab].second);
     setCurrentThemeColor(tabs[activeTab].themeColor);
-  }, [activeTab, tabs, setCurrentThemeColor]);
-
-  // function play(audio, times) {
-  //   if (times <= 0) {
-  //     return;
-  //   }
-  //   var played = 0;
-  //   audio.addEventListener("ended", function () {
-  //     played++;
-  //     if (played < times) {
-  //       audio.play();
-  //     } else {
-  //       return;
-  //     }
-  //   });
-  //   audio.play();
-  // }
+    // setActive(activeTab === 0 ? autoStartPomodoro : autoStartBreak)
+    setCurrentTask(tasks.find((task) => task.isActive === true));
+  }, [activeTab, tabs, tasks]);
 
   useEffect(() => {
     return alarm
@@ -158,6 +142,10 @@ const CountDownBox = ({
   }, [minute, second]);
 
   useEffect(() => {
+    setIsStarting(active);
+  }, [active])
+
+  useEffect(() => {
     const timerInterval =
       active === true
         ? setInterval(() => {
@@ -169,7 +157,6 @@ const CountDownBox = ({
               } else {
                 clearInterval(timerInterval);
                 changeTab();
-                console.log("testt");
               }
             }
           }, 1000)

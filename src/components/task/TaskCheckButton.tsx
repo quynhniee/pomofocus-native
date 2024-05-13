@@ -3,14 +3,14 @@ import { IconButton, Text } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity, Text as RNText } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Context from '../../store/Context';
-// import { updateTask } from '../../api';
+import { updateTask } from '../../api';
 
 const TaskCheckButton = ({ tasks, getTasks, task }) => {
   const clickHandle = (e) => {
     e.stopPropagation();
     const newTask = { ...task, isCompleted: !task.isCompleted };
     getTasks(tasks.map((t) => (t.id === task.id ? newTask : t)));
-    // updateTask(task.id, newTask);
+    updateTask(task.id, newTask);
   };
   const { currentThemeColor } = useContext(Context);
   return (

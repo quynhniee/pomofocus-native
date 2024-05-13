@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Text as RNText } from 'react-native';
-import { Divider, IconButton, List, Title } from 'react-native-paper';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { Button, Dialog, Divider, IconButton, List, Portal, Title, Text } from 'react-native-paper';
 import TaskMenu from './TaskMenu';
 import AddTaskButton from './AddTaskButton';
 import TaskItem from './TaskItem';
 import TaskCheckButton from './TaskCheckButton';
 import TaskCreator from './TaskCreator';
 import Stack from '../Stack';
+import Context from '../../store/Context';
 
 const TasksList = ({ tasks, getTasks }) => {
   const [expand, setExpand] = useState(false);
@@ -27,8 +28,8 @@ const TasksList = ({ tasks, getTasks }) => {
           <TaskItem tasks={tasks} getTasks={getTasks} task={task}>
             <TaskCheckButton tasks={tasks} getTasks={getTasks} task={task} />
             <View style={styles.taskInfo}>
-              <RNText style={styles.taskText}>{task.act}</RNText>
-              <RNText style={styles.taskText}> / {task.EP}</RNText>
+              <Text style={styles.taskText}>{task.act}</Text>
+              <Text style={styles.taskText}> / {task.EP}</Text>
             </View>
           </TaskItem>
         )}

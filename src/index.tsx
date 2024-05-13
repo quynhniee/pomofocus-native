@@ -15,6 +15,7 @@ import Context from "./store/Context";
 const Stack = createStackNavigator();
 const Router = () => {
   axios.defaults.baseURL = "http://10.0.2.2:5001/api/";
+  // axios.defaults.baseURL = "http://10.20.80.249:5001/api/";
   const dispatch = useDispatch();
   const isAuth = useSelector((state: any) => state?.auth?.isAuth);
   const [token, setToken] = React.useState<string>("");
@@ -25,7 +26,7 @@ const Router = () => {
   const [themeColor, setThemeColor] = React.useState(currentThemeColor);
 
   useEffect(() => {
-    setThemeColor(currentThemeColor);
+    setThemeColor(themeColor);
   }, [currentThemeColor]);
 
   useEffect(() => { 
