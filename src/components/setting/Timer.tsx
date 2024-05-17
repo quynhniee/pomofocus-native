@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { Switch, TextInput, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Context from "../../store/Context";
 import Stack from "../Stack";
-import { Title } from './Components';
+import { IOSSwitch, Title } from './Components';
 
 const Timer = ({
   getPomodoroMinute,
@@ -40,7 +40,7 @@ const Timer = ({
                 <Text style={styles.greyText}>{tab.name}</Text>
                 <TextInput
                   style={styles.input}
-                  defaultValue={tab.minute.toString()}
+                  defaultValue={tab.minute?.toString()}
                   keyboardType="numeric"
                   onChangeText={(value) => onChangeHandle(value, index)}
                 />
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical: Platform.OS === 'ios' ? 10 : 0,
   },
   greyText: {
     color: "#bdbdbd",

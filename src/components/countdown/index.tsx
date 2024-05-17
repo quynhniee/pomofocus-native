@@ -38,14 +38,29 @@ const CountDownBox = ({
   const [minute, setMinute] = useState(tabs[activeTab].minute);
   const [second, setSecond] = useState(tabs[activeTab].second);
   const [alarm, setAlarm] = useState(null);
-  async function playSound() {
+
+  async function playTickingSound() {
     console.log("Loading Sound");
     const { sound } = await Audio.Sound.createAsync(
-      require("../../../assets/alarms/clock-alarm-8761.mp3")
+      { uri: 'https://drive.google.com/uc?export=download&id=1yg61IYjdqLXmaPm8-01aDRN-5qRW2ake'}
+    );
+    setAlarm(sound);
+    await sound.setIsLoopingAsync(true);
+    await sound.playAsync();
+  }
+
+  async function playSoundPreview(soundFilePath: string) {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: 'https://drive.google.com/uc?export=download&id=1yg61IYjdqLXmaPm8-01aDRN-5qRW2ake'}
     );
     setAlarm(sound);
     await sound.playAsync();
-  }
+    // Stop the sound after 5 seconds
+  setTimeout(async () => {
+    await sound.stopAsync();
+  }, 5000);
+}
 
   const getActive = useCallback((data) => {
     setActive(data);
@@ -86,7 +101,7 @@ const CountDownBox = ({
       increaseCounter();
       getTasks(updateItemAct());
       // playAlarm();
-      playSound();
+      playSoundPreview("../../../assets/alarms/clock-alarm-8761.mp3");
       if ((counter + 1) % longBreakInterval === 0) {
         getActiveTab(2);
         setTabs(
@@ -137,12 +152,14 @@ const CountDownBox = ({
 
   useEffect(() => {
     if (minute === 0 && second === 0) {
-      playSound();
+      playSoundPreview("../../../assets/alarms/clock-alarm-8761.mp3");
     }
   }, [minute, second]);
 
   useEffect(() => {
     setIsStarting(active);
+    if (!active && alarm) alarm.stopAsync();
+    else if (active && alarm) playTickingSound();
   }, [active])
 
   useEffect(() => {

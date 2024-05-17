@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Switch } from 'react-native';
+import { View, StyleSheet, Text, Switch, Platform } from 'react-native';
 import { Button } from 'react-native-paper';
 import Modal from '../Modal';
 import Palette from '../Palette';
@@ -35,7 +35,7 @@ const ThemeModal = ({ tab, updateTab }) => {
         onPress={openHandle}
       > </Button>
       <Modal open={open} onClose={closeHandle}>
-        <View style={{...styles.stack, marginTop: 20}}>
+        <View style={{...styles.stack, marginTop: Platform.OS === 'ios' ? 40 : 20}}>
           <TextStyled> Pick a color for {tab.name} </TextStyled>
         </View>
         <Palette tab={tab} updateTab={updateTab} closeHandle={closeHandle} />

@@ -1,7 +1,7 @@
 import React from "react";
 import { FlexStyle, StyleSheet, View, ViewStyle } from "react-native";
 
-interface StackProps {
+interface StackProps extends FlexStyle{
   children?: React.ReactNode
   flexDirection?: FlexStyle["flexDirection"]
   direction?: FlexStyle["direction"]
@@ -16,21 +16,33 @@ interface StackProps {
 }
 
 
-const Stack = ({children,...props}: StackProps) => {
-  const styles : ViewStyle = {
-    direction: props.direction,
-    alignItems: props.alignBlock,
-    justifyContent: props.alignInline,
-    flexDirection: props.flexDirection,
-    gap: props.gap,
-    columnGap: props.columnGap,
-    rowGap: props.rowGap,
-    flexWrap: props.flexWrap,
+const Stack = ({
+  children,
+  direction = 'ltr', // default value
+  alignBlock = 'center', // default value
+  alignInline = 'flex-start', // default value
+  flexDirection = 'row', // default value
+  gap = 0, // default value
+  columnGap = 0, // default value
+  rowGap = 0, // default value
+  flexWrap = 'nowrap', // default value
+  borderLeftWidth = 0, // default value
+  ...props
+}: StackProps) => {
+  const styles: ViewStyle = {
+    direction,
+    alignItems: alignBlock,
+    justifyContent: alignInline,
+    flexDirection,
+    gap,
+    columnGap,
+    rowGap,
+    flexWrap,
     flexGrow: 1,
-    borderLeftWidth: props.borderLeftWidth,
+    borderLeftWidth,
     borderLeftColor: '#000',
-    // width: props.width,
-  }
+    ...props
+  };
   
   return (
     <View

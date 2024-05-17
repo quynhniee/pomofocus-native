@@ -17,7 +17,7 @@ const Theme = () => {
       <ListItem>
         <RNText>Color Themes</RNText>
         <View>
-          <Stack flexDirection="row" gap={5}>
+          <Stack flexDirection="row" columnGap={5}>
             <ThemeModal tab={tabs[0]} updateTab={updatePomodoro} />
             <ThemeModal tab={tabs[1]} updateTab={updateShortBreak} />
             <ThemeModal tab={tabs[2]} updateTab={updateLongBreak} />

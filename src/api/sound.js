@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Get Alarm sounds
-export const alarm = async () => {
+export const getAllAlarms = async () => {
   try {
     const response = await axios.get("setting/ticking");
     return response;
@@ -11,7 +11,7 @@ export const alarm = async () => {
 };
 
 // Get Ticking sounds
-export const ticking = async () => {
+export const getAllTickings = async () => {
   try {
     const response = await axios.get("setting/alarm");
     return response;

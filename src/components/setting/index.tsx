@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, ScrollView } from "react-native";
 import {
   Switch,
   Text as RNText,
@@ -15,10 +15,11 @@ import TaskSetting from "./Task";
 import ThemeSetting from "./Theme";
 import Modal from "../Modal";
 import Stack from "../Stack";
-import useSnackbar from '../../hooks/useSnackbar';
- 
+import useSnackbar from "../../hooks/useSnackbar";
+import Sound from "./Sound";
+
 const SettingButton = () => {
-  const {showSnackbar, hideSnackbar, message, visible} = useSnackbar()
+  const { showSnackbar, hideSnackbar, message, visible } = useSnackbar();
   const { setting, setSetting, tabs, setTabs } = useContext(Context);
 
   const pomodoro = tabs[0],
@@ -104,45 +105,42 @@ const SettingButton = () => {
     updateTabsStorage();
     updateSettingStorage();
     setOpen(false);
-    showSnackbar('Settings saved!')
+    showSnackbar("Settings saved!");
   };
 
+  useEffect(() => {
+    getSetting()
+      .then((resp) => resp?.data)
+      .then((data) => {
+        if (data) setSetting(data);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
-	useEffect(() => {
-		getSetting()
-			.then((resp) => resp?.data)
-			.then((data) => {
-        if (data)
-				  setSetting(data);
-			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [open]);
+  useEffect(() => {
+    getTabs()
+      .then((res) => res?.data)
+      .then((data) => {
+        if (data) setTabs(data);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-	useEffect(() => {
-		getTabs()
-			.then((res) => res?.data)
-			.then((data) => {
-        if (data)
-				  setTabs(data);
-			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		setAutoStartBreak(setting.autoStartBreak);
-		setAutoStartPomodoro(setting.autoStartPomodoro);
-		setPomodoroMinute(pomodoro.minute);
-		setLongBreakMinute(longBreak.minute);
-		setShortBreakMinute(shortBreak.minute);
-		setAutoSwitchTasks(setting.autoSwitchTasks);
-		setLongBreakInterval(setting.longBreakInterval);
-		setAlarmSound(setting.alarmSound);
-		setAlarmVolume(setting.alarmVolume);
-		setAlarmSoundRepeat(setting.alarmSoundRepeat);
-		setTickingSound(setting.tickingSound);
-		setTickingVolume(setting.tickingVolume);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [setting]);
+  useEffect(() => {
+    setAutoStartBreak(setting.autoStartBreak);
+    setAutoStartPomodoro(setting.autoStartPomodoro);
+    setPomodoroMinute(pomodoro.minute);
+    setLongBreakMinute(longBreak.minute);
+    setShortBreakMinute(shortBreak.minute);
+    setAutoSwitchTasks(setting.autoSwitchTasks);
+    setLongBreakInterval(setting.longBreakInterval);
+    setAlarmSound(setting.alarmSound);
+    setAlarmVolume(setting.alarmVolume);
+    setAlarmSoundRepeat(setting.alarmSoundRepeat);
+    setTickingSound(setting.tickingSound);
+    setTickingVolume(setting.tickingVolume);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setting]);
 
   return (
     <>
@@ -155,47 +153,63 @@ const SettingButton = () => {
           </View>
           <Divider />
 
-          <View style={styles.settings}>
-            <Stack>
-              <TimerSetting
-                getPomodoroMinute={getPomodoroMinute}
-                getShortBreakMinute={getShortBreakMinute}
-                getLongBreakMinute={getLongBreakMinute}
-                toggleStartBreak={toggleStartBreak}
-                toggleStartPomodoro={toggleStartPomodoro}
-                getLongBreakInterval={getLongBreakInterval}
-                longBreakInterval={longBreakInterval}
-                autoStartBreak={autoStartBreak}
-                autoStartPomodoro={autoStartPomodoro}
-              />
-              <Divider />
-              <TaskSetting
-                autoSwitchTasks={autoSwitchTasks}
-                toggleSwitchTasks={toggleSwitchTasks}
-              />
-              <Divider />
-              
-              <ThemeSetting />
-            </Stack>
-          </View>
-          <View>
+          <ScrollView>
+            <View style={styles.settings}>
+              <Stack marginBottom={20}>
+                <TimerSetting
+                  getPomodoroMinute={getPomodoroMinute}
+                  getShortBreakMinute={getShortBreakMinute}
+                  getLongBreakMinute={getLongBreakMinute}
+                  toggleStartBreak={toggleStartBreak}
+                  toggleStartPomodoro={toggleStartPomodoro}
+                  getLongBreakInterval={getLongBreakInterval}
+                  longBreakInterval={longBreakInterval}
+                  autoStartBreak={autoStartBreak}
+                  autoStartPomodoro={autoStartPomodoro}
+                />
+                <Divider />
+                <Sound
+                  alarmSound={alarmSound}
+                  setAlarmSound={setAlarmSound}
+                  alarmVolume={alarmVolume}
+                  setAlarmVolume={setAlarmVolume}
+                  tickingSound={tickingSound}
+                  setTickingSound={setTickingSound}
+                  tickingVolume={tickingVolume}
+                  setTickingVolume={setTickingVolume}
+                   />
+                <Divider />
+                <TaskSetting
+                  autoSwitchTasks={autoSwitchTasks}
+                  toggleSwitchTasks={toggleSwitchTasks}
+                />
+                <Divider />
 
-          <Stack alignInline='center' flexDirection='row' alignBlock='center'  >
-            <Button onPress={saveHandle} mode="contained-tonal">
-              Save
-            </Button>
-          </Stack>
-          </View>
+                <ThemeSetting />
+              </Stack>
+              <View>
+                <Stack
+                  alignInline="center"
+                  flexDirection="row"
+                  alignBlock="center"
+                >
+                  <Button onPress={saveHandle} mode="contained-tonal">
+                    Save
+                  </Button>
+                </Stack>
+              </View>
+            </View>
+          </ScrollView>
         </Modal>
       </View>
-        <Snackbar
-        style={{zIndex: 1000}}
-          duration={Snackbar.DURATION_SHORT}
-          onDismiss={hideSnackbar}
-          visible={visible}
-        >
-          {message}
-        </Snackbar>
+      <Snackbar
+        style={{ zIndex: 1000 }}
+        duration={Snackbar.DURATION_SHORT}
+        onDismiss={hideSnackbar}
+        visible={visible}
+      >
+        {message}
+      </Snackbar>
     </>
   );
 };
@@ -216,9 +230,9 @@ const styles = StyleSheet.create({
   },
   settings: {
     padding: 15,
+    marginBottom: 100,
   },
-  footer: {
-  },
+  footer: {},
 });
 
 export default SettingButton;
