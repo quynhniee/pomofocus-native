@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const AddTaskButton = ({ getExpand }) => {
   return (
@@ -17,7 +16,6 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 2,
     opacity: 0.6,
-    marginBottom: 40
   },
   content: {
     height: "100%",

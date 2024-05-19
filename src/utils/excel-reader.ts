@@ -20,33 +20,29 @@ const handleImport = async (f: any) => {
   // Chọn tệp
   try {
     console.log("duong");
-    const res = await DocumentPicker.getDocumentAsync({
+    const res:DocumentPicker.DocumentPickerResult = await DocumentPicker.getDocumentAsync({
       type: [
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "application/vnd.ms-excel",
       ],
     });
-    if (res.type === "success") {
-      // Đọc tệp
-      const fileUri = res.uri;
-      const fileContent = await FileSystem.readAsStringAsync(fileUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      const workbook = XLSX.read(fileContent, { type: "base64" });
+      const uri = res.assets[0].uri
+  
 
-      // Chuyển đổi dữ liệu từ Sheet đầu tiên thành JSON
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const fileContent = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        const workbook = XLSX.read(fileContent, { type: "base64" });
 
-      // Cập nhật state
-      f(jsonData);
-      console.log(jsonData)
-    } else if (res.type === "cancel") {
-      console.log("User cancelled the picker");
-    }
-    console.log("res: ", res);
-  } catch (e) {
+        // Chuyển đổi dữ liệu từ Sheet đầu tiên thành JSON
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        return jsonData;
+
+    } catch (e) {
     console.log(e);
+    
   }
+}
 
-export default readExcelFile;
+export  {readExcelFile, handleImport};

@@ -34,11 +34,14 @@ const TasksList = ({ tasks, getTasks }) => {
           </TaskItem>
         )}
       />
-      {expand === false ? (
-        <AddTaskButton getExpand={getExpand} />
-      ) : (
-        <TaskCreator getExpand={getExpand} getTasks={getTasks} tasks={tasks} task={undefined} />
-      )}
+      <View style={{marginBottom: 40}}>
+        
+        {expand === false ? (
+          <AddTaskButton getExpand={getExpand} />
+        ) : (
+          <TaskCreator getExpand={getExpand} getTasks={getTasks} tasks={tasks} task={undefined} />
+        )}
+      </View>
     </Stack>
   );
 };

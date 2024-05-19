@@ -11,6 +11,8 @@ import { useJwt } from "react-jwt";
 import { setHeader } from "./api";
 import axios from "axios";
 import Context from "./store/Context";
+import { Snackbar } from 'react-native-paper';
+import { hideSnackbar as hideSnackbarActions, showSnackbar as  showSnackbarAction } from './redux/toast';
 
 const Stack = createStackNavigator();
 const Router = () => {
@@ -23,6 +25,7 @@ const Router = () => {
   const { decodedToken, isExpired } = useJwt(token);
   const { currentThemeColor } = React.useContext(Context);
   const [themeColor, setThemeColor] = React.useState(currentThemeColor);
+
 
   useEffect(() => {
     setThemeColor(themeColor);
@@ -43,6 +46,7 @@ const Router = () => {
     }
   }, [dispatch, isExpired, token]);
 
+
   return (
     <>
       <NavigationContainer>
@@ -52,7 +56,6 @@ const Router = () => {
             headerShown: false,
           }}
         >
-          
           {!isAuth && isAuth !== null && (
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
           )}

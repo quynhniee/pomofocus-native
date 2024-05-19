@@ -3,7 +3,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { theme } from './src/core/theme';
 import AppMain from './src/'
 import { Provider } from 'react-redux';
-import store from './src/redux/auth';
+import store from './src/redux';
 import SettingProvider from './src/store/Provider';
 
 export default function App() { 

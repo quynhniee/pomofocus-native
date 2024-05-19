@@ -17,9 +17,12 @@ import Modal from "../Modal";
 import Stack from "../Stack";
 import useSnackbar from "../../hooks/useSnackbar";
 import Sound from "./Sound";
+import { useDispatch } from 'react-redux';
+import { showSnackbar } from '../../redux/toast';
 
 const SettingButton = () => {
-  const { showSnackbar, hideSnackbar, message, visible } = useSnackbar();
+  const dispatch = useDispatch();
+
   const { setting, setSetting, tabs, setTabs } = useContext(Context);
 
   const pomodoro = tabs[0],
@@ -106,7 +109,7 @@ const SettingButton = () => {
     updateTabsStorage();
     updateSettingStorage();
     setOpen(false);
-    showSnackbar("Settings saved!");
+    dispatch(showSnackbar("Settings saved!"));
   };
 
   useEffect(() => {
@@ -203,14 +206,7 @@ const SettingButton = () => {
           </ScrollView>
         </Modal>
       </View>
-      <Snackbar
-        style={{ zIndex: 1000 }}
-        duration={Snackbar.DURATION_SHORT}
-        onDismiss={hideSnackbar}
-        visible={visible}
-      >
-        {message}
-      </Snackbar>
+    
     </>
   );
 };

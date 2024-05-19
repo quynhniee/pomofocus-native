@@ -16,8 +16,6 @@ const Title = ({ children }) => (
 
 const TextStyled = props => <Text style={styles.text} {...props} />;
 
-const IOSSwitch = props => <Switch {...props} />;
-
 const ThemeModal = ({ tab, updateTab }) => {
   const [open, setOpen] = useState(false);
   const openHandle = () => setOpen(true);
@@ -70,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { List, ListItem, TextStyled as Text, IOSSwitch, Title, ThemeModal };
+export { List, ListItem, TextStyled as Text, Title, ThemeModal };

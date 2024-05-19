@@ -52,7 +52,7 @@ const CountDownBox = ({
   }
 
   async function playAlarmSound() {
-    await playNewSound(alarmSound, alarmVolume, 10000);
+    await playNewSound(alarmSound, alarmVolume, 7000);
   }
 
   const getActive = useCallback((data) => {
@@ -88,11 +88,15 @@ const CountDownBox = ({
     return newTasks;
   }
 
-  function changeTab() {
+  async function changeTab() {
     if (tabs[activeTab] === tabs[0]) {
       getActive(autoStartBreak);
       increaseCounter();
-      getTasks(updateItemAct());
+      const newTasks = updateItemAct()
+      getTasks(newTasks);
+      await newTasks.forEach((t) => {
+        updateTask(t.id, t);
+      });
 
       if ((counter + 1) % longBreakInterval === 0) {
         getActiveTab(2);

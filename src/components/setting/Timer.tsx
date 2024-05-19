@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, Platform } from "react-native";
-import { Switch, TextInput, Text } from "react-native-paper";
+import { Switch, TextInput, Text, HelperText } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Context from "../../store/Context";
 import Stack from "../Stack";
-import { IOSSwitch, Title } from './Components';
+import { Title } from './Components';
 
 const Timer = ({
   getPomodoroMinute,

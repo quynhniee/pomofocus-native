@@ -5,16 +5,22 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { View, Text, StyleSheet, Animated, ScrollView } from "react-native";
+import { Text, StyleSheet, Animated, ScrollView } from "react-native";
 import AppHeader from "../components/header";
 import CountDownBox from "../components/countdown";
-import { theme } from "../core/theme";
 import Context from "../store/Context";
 import Stack from "../components/Stack";
 import TasksList from "../components/task";
 import { getAllTask } from "../api";
+import { Snackbar } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideSnackbar } from '../redux/toast';
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+  const message = useSelector((state: any) => state.toast.message);
+  const toastVisible = useSelector((state: any) => state.toast.visible);
+
   const { currentThemeColor, currentTask, activeTab, setActiveTab } = useContext(Context);
   const [tasks, setTasks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
@@ -48,9 +54,21 @@ const HomeScreen = () => {
   const getTasks = useCallback((data) => setTasks(data), []);
 
 
+  const hideSnackbarActions = () => {
+    dispatch(hideSnackbar());
+  }
+
   return (
     <>
       <Animated.View style={{ flex: 1, backgroundColor: backgroundColor }}>
+              <Snackbar
+        style={{zIndex: 1000}}
+        duration={Snackbar.DURATION_SHORT}
+        onDismiss={hideSnackbarActions}
+        visible={toastVisible}
+        >
+        {message}
+        </Snackbar>
         <AppHeader />
         <ScrollView style={{ padding: 20 }}>
           <Stack>

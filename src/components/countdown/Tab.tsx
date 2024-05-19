@@ -62,10 +62,10 @@ const Tab = ({ getActiveTab, getActive, activeTab }) => {
         {tabs.map((value, index) => (
           <Button
             key={index}
-            buttonColor={value.isActive ? colors.primary : colors.background}
+            buttonColor={index === activeTab ? colors.primary : colors.background}
             onPress={() => clickTabButtonHandle(index)}
             style={{
-              backgroundColor: value.isActive === true ? "#0000002b" : null,
+              backgroundColor: index === activeTab ? "#0000002b" : null,
             }}
           >
             <Text

@@ -52,10 +52,11 @@ const TaskCreator = ({ getExpand, task, tasks, getTasks }) => {
             placeholder="What are you working on?"
             autoFocus
             defaultValue={taskUpdate.content}
+            value={content}
             onChangeText={(value) => setContent(value)}
           />
           <EstPomodoros task={task} getTaskUpdate={getTaskUpdate} />
-          <Stack flexDirection='row' gap={10}>
+          <Stack flexDirection='row' columnGap={10}>
             {['+ Add Note', '+ Add Project'].map((e, index) => (
               <TouchableOpacity key={index}>
                 <RNText style={styles.buttonText}>{e}</RNText>
@@ -64,17 +65,17 @@ const TaskCreator = ({ getExpand, task, tasks, getTasks }) => {
           </Stack>
         </View>
         <Card.Actions style={styles.actions}> 
-          <Stack flexDirection='row' alignBlock='center' flexWrap='nowrap' alignInline='space-between' gap={20}>
+          <Stack flexDirection='row' flex={1} justifyContent='space-between' flexWrap='nowrap' columnGap={20}>
             {task ? (
               <Button mode='contained-tonal'  buttonColor={currentThemeColor + '50'} onPress={removeHandle}>
                 Delete
               </Button>
             ) : null}
-            <Stack flexDirection='row' gap={10}>
+            <Stack flexDirection='row' columnGap={10}>
               <Button mode="contained" buttonColor={currentThemeColor} onPress={() => getExpand(false)}>
                 Cancel
               </Button>
-              <Button mode="contained" buttonColor={currentThemeColor} onPress={saveHandle}>
+              <Button mode="contained" buttonColor={currentThemeColor} onPress={saveHandle} disabled={!content || content === ''}>
                 Save
               </Button>
             </Stack>
