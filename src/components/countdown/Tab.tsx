@@ -5,7 +5,7 @@ import Context from "../../store/Context";
 import { updateTabs } from "../../api";
 
 const Tab = ({ getActiveTab, getActive, activeTab }) => {
-  const { tabs, setTabs, isStarting, setIsStarting, setting } = useContext(Context);
+  const { tabs, setTabs, isStarting, setting } = useContext(Context);
   const {autoStartBreak, autoStartPomodoro} = setting
   const { colors } = useTheme();
 

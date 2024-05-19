@@ -24,7 +24,6 @@ import { emailValidator, passwordValidator } from "../utils/validator";
 import { useFocusEffect } from "@react-navigation/native";
 import { login, setHeader } from "../api";
 import useSnackbar from "../hooks/useSnackbar";
-import { Audio } from "expo-av";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
@@ -60,7 +59,6 @@ const LoginScreen = ({ navigation }: Props) => {
       if (response.status === 200) {
         setHeader(response.data.token);
         dispatch(authAction.login());
-        // navigation.navigate('HomeScreen');
       } else {
         showSnackbar(response.data.message);
       }

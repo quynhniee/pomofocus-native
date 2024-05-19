@@ -11,8 +11,7 @@ import Tab from "./Tab";
 import TimerButton from "./TimerButton";
 import CountDown from "./Countdown";
 import { updateTask } from "../../api";
-import { Audio } from "expo-av";
-import { loadSound, pauseSound, playSound } from '../../utils/sound-player';
+import { loadSound, pauseSound, playNewSound, playPreview, playSound } from '../../utils/sound-player';
 
 const CountDownBox = ({
   counter,
@@ -53,8 +52,7 @@ const CountDownBox = ({
   }
 
   async function playAlarmSound() {
-    await loadSound(alarmSound, alarmVolume);
-    await playSound();
+    await playNewSound(alarmSound, alarmVolume, 10000);
   }
 
   const getActive = useCallback((data) => {
@@ -131,30 +129,23 @@ const CountDownBox = ({
     setMinute(tabs[activeTab].minute);
     setSecond(tabs[activeTab].second);
     setCurrentThemeColor(tabs[activeTab].themeColor);
+    // may auto start when click on tab button
     // setActive(activeTab === 0 ? autoStartPomodoro : autoStartBreak)
     setCurrentTask(tasks.find((task) => task.isActive === true));
   }, [activeTab, tabs, tasks]);
 
-
-
-  useEffect(() => {
-    if (minute === 0 && second === 0) {
-
-    }
-  }, [minute, second]);
-
   useEffect(() => {
     setIsStarting(active);
-    if (tickingSound && activeTab === 0 && active === true ) {
-      // playTickingSound();
+    if (tickingSound && active === true ) {
+      playTickingSound();
     }
-    else if (tickingSound && activeTab === 0 && active === false) {
-      // stopTickingSound();
+    else if (tickingSound && active === false) {
+      stopTickingSound();
     }
   }, [active])
 
   useEffect(() => {
-    // loadSound(tickingSound, tickingVolume);
+    loadSound(tickingSound, tickingVolume);
   }, [])
 
   useEffect(() => {
@@ -169,7 +160,7 @@ const CountDownBox = ({
               } else {
                 clearInterval(timerInterval);
                 changeTab();
-                // playAlarmSound();
+                playAlarmSound();
               }
             }
           }, 1000)
@@ -179,7 +170,7 @@ const CountDownBox = ({
 
   return (
     <View style={styles.container}>
-      <Tab getActiveTab={getActiveTab} getActive={getActive} activeTab={activeTab} changeTab={changeTab} />
+      <Tab getActiveTab={getActiveTab} getActive={getActive} activeTab={activeTab} />
       <CountDown minute={minute} second={second} />
       <TimerButton
         themeColor={currentThemeColor}

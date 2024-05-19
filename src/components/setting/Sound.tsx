@@ -28,7 +28,7 @@ const AlarmSelect = ({
   const isFirstRender = useRef(true);
   const [alarms, setAlarms] = useState([]);
   const [selectedAlarm, setSelectedAlarm] = useState(alarmSound);
-  const [volume, setVolume] = useState([alarmVolume * 100]); // Default volume
+  const [volume, setVolume] = useState([Math.round(alarmVolume * 100)]); // Default volume
 
 
   const debouncedPlayPreview = useCallback(
