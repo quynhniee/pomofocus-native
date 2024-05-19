@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   Button,
@@ -25,6 +25,7 @@ const AlarmSelect = ({
   alarmVolume,
   setAlarmVolume,
 }) => {
+  const isFirstRender = useRef(true);
   const [alarms, setAlarms] = useState([]);
   const [selectedAlarm, setSelectedAlarm] = useState(alarmSound);
   const [volume, setVolume] = useState([alarmVolume * 100]); // Default volume
@@ -39,6 +40,10 @@ const AlarmSelect = ({
   );
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     debouncedPlayPreview(selectedAlarm, volume);
   }, [selectedAlarm, volume]); 
 
@@ -99,9 +104,10 @@ const TickingSelect = ({
   tickingVolume,
   setTickingVolume,
 }) => {
+  const isFirstRender = useRef(true);
   const [tickings, setTickings] = useState([]);
   const [selectedTicking, setSelectedTicking] = useState(tickingSound);
-  const [volume, setVolume] = useState([tickingVolume * 100]); // Default volume
+  const [volume, setVolume] = useState([Math.round(tickingVolume * 100)]); // Default volume
 
   const debouncedPlayPreview = useCallback(
     debounce(async (selectedTicking, volumeData) => {
@@ -121,6 +127,10 @@ const TickingSelect = ({
   }, []);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     debouncedPlayPreview(selectedTicking, volume);
   }, [selectedTicking, volume]); 
 
@@ -139,6 +149,7 @@ const TickingSelect = ({
             label: ticking.name,
             value: ticking.sound,
           }))}
+          value={selectedTicking}
         />
         <Stack flexDirection="row" alignBlock="center" gap={10}>
           <Text style={{ marginEnd: 20 }}>{volume}</Text>

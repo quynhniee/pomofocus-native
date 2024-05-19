@@ -12,6 +12,7 @@ import TimerButton from "./TimerButton";
 import CountDown from "./Countdown";
 import { updateTask } from "../../api";
 import { Audio } from "expo-av";
+import { loadSound, pauseSound, playSound } from '../../utils/sound-player';
 
 const CountDownBox = ({
   counter,
@@ -30,6 +31,11 @@ const CountDownBox = ({
     autoStartPomodoro,
     autoSwitchTasks,
     longBreakInterval,
+    alarmSound,
+    tickingSound,
+    alarmVolume,
+    tickingVolume,
+    
   } = setting;
 
   const [active, setActive] = useState(
@@ -37,30 +43,19 @@ const CountDownBox = ({
   );
   const [minute, setMinute] = useState(tabs[activeTab].minute);
   const [second, setSecond] = useState(tabs[activeTab].second);
-  const [alarm, setAlarm] = useState(null);
 
   async function playTickingSound() {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: 'https://drive.google.com/uc?export=download&id=1yg61IYjdqLXmaPm8-01aDRN-5qRW2ake'}
-    );
-    setAlarm(sound);
-    await sound.setIsLoopingAsync(true);
-    await sound.playAsync();
+    await playSound();
   }
 
-  async function playSoundPreview(soundFilePath: string) {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: 'https://drive.google.com/uc?export=download&id=1yg61IYjdqLXmaPm8-01aDRN-5qRW2ake'}
-    );
-    setAlarm(sound);
-    await sound.playAsync();
-    // Stop the sound after 5 seconds
-  setTimeout(async () => {
-    await sound.stopAsync();
-  }, 5000);
-}
+  async function stopTickingSound() {
+    await pauseSound()
+  }
+
+  async function playAlarmSound() {
+    await loadSound(alarmSound, alarmVolume);
+    await playSound();
+  }
 
   const getActive = useCallback((data) => {
     setActive(data);
@@ -100,8 +95,7 @@ const CountDownBox = ({
       getActive(autoStartBreak);
       increaseCounter();
       getTasks(updateItemAct());
-      // playAlarm();
-      playSoundPreview("../../../assets/alarms/clock-alarm-8761.mp3");
+
       if ((counter + 1) % longBreakInterval === 0) {
         getActiveTab(2);
         setTabs(
@@ -141,26 +135,27 @@ const CountDownBox = ({
     setCurrentTask(tasks.find((task) => task.isActive === true));
   }, [activeTab, tabs, tasks]);
 
-  useEffect(() => {
-    return alarm
-      ? () => {
-          console.log("Unloading Sound");
-          alarm.unloadAsync();
-        }
-      : undefined;
-  }, [alarm]);
+
 
   useEffect(() => {
     if (minute === 0 && second === 0) {
-      playSoundPreview("../../../assets/alarms/clock-alarm-8761.mp3");
+
     }
   }, [minute, second]);
 
   useEffect(() => {
     setIsStarting(active);
-    if (!active && alarm) alarm.stopAsync();
-    else if (active && alarm) playTickingSound();
+    if (tickingSound && activeTab === 0 && active === true ) {
+      // playTickingSound();
+    }
+    else if (tickingSound && activeTab === 0 && active === false) {
+      // stopTickingSound();
+    }
   }, [active])
+
+  useEffect(() => {
+    // loadSound(tickingSound, tickingVolume);
+  }, [])
 
   useEffect(() => {
     const timerInterval =
@@ -174,6 +169,7 @@ const CountDownBox = ({
               } else {
                 clearInterval(timerInterval);
                 changeTab();
+                // playAlarmSound();
               }
             }
           }, 1000)
@@ -183,7 +179,7 @@ const CountDownBox = ({
 
   return (
     <View style={styles.container}>
-      <Tab getActiveTab={getActiveTab} getActive={getActive} />
+      <Tab getActiveTab={getActiveTab} getActive={getActive} activeTab={activeTab} changeTab={changeTab} />
       <CountDown minute={minute} second={second} />
       <TimerButton
         themeColor={currentThemeColor}

@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { List, IconButton, Text, Portal, Dialog, Button } from "react-native-paper";
+import {
+  List,
+  IconButton,
+  Text,
+  Portal,
+  Dialog,
+  Button,
+} from "react-native-paper";
 import {
   View,
   StyleSheet,
@@ -9,17 +16,19 @@ import {
 import TaskCreator from "./TaskCreator";
 import Stack from "../Stack";
 import { updateTask } from "../../api";
-import Context from '../../store/Context';
+import Context from "../../store/Context";
 
 const TaskItem = ({ tasks, getTasks, task, children }) => {
   const [expand, setExpand] = useState(false);
   const [visible, setVisible] = React.useState(false);
-  const {currentTask, isStarting, setCurrentTask} = useContext(Context)
+  const { currentTask, isStarting, setCurrentTask, setIsStarting, setting, tabs } = useContext(Context);
+  const {autoStartPomodoro} = setting
+
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
   const updateCurrentTask = async () => {
-    setCurrentTask({ ...task, isActive: true })
+    setCurrentTask({ ...task, isActive: true });
     const newTasks = tasks.map((t) =>
       task.id === t.id ? { ...task, isActive: true } : { ...t, isActive: false }
     );
@@ -27,39 +36,37 @@ const TaskItem = ({ tasks, getTasks, task, children }) => {
     await newTasks.forEach((t) => {
       updateTask(t.id, t);
     });
-  }
+  };
 
   const confirmDialog = async () => {
-   await updateCurrentTask()
+    await updateCurrentTask();
     setVisible(false);
-
   };
 
   const ConfirmDialog = () => {
-    return <Portal>
-          <Dialog visible={visible} onDismiss={hideDialog}>
-            <Dialog.Title>Warning</Dialog.Title>
-            <Dialog.Content>
-              <Text variant="bodyMedium">Do you want to switch task?</Text>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={hideDialog}>Cancel</Button>
-              <Button onPress={confirmDialog}>Okay</Button>
-
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-  }
-
+    return (
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>Warning</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">Do you want to switch task?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Cancel</Button>
+            <Button onPress={confirmDialog}>Okay</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    );
+  };
 
   const clickHandle = async () => {
     if (isStarting) {
-      showDialog()
+      showDialog();
+    } else {
+      await updateCurrentTask();
+
     }
-    else {
-      await updateCurrentTask()
-    }
-   
   };
   const getExpand = (data) => setExpand(data);
   return (

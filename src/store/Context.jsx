@@ -46,7 +46,9 @@ const Context = createContext({
 	currentTask: {},
 	setCurrentTask: (any) => {},
 	isStarting: false,
-	setIsStarting: (any) => {}
+	setIsStarting: (any) => {},
+	activeTab: 0,
+	setActiveTab: (any) => {}
 });
 
 export default Context;

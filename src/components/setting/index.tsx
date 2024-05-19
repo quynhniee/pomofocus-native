@@ -99,6 +99,7 @@ const SettingButton = () => {
     };
     setSetting(_setting);
     updateSetting(_setting);
+    console.log(_setting)
   };
 
   const saveHandle = () => {

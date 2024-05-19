@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { Divider } from 'react-native-paper';
 import ButtonGroup from './ButtonGroup';
 // import Logo from '../Logo';
@@ -18,7 +18,7 @@ const AppHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginTop: Platform.OS === 'ios' ? 50 : 20,
   },
 });
 

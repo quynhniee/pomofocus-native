@@ -15,7 +15,7 @@ import TasksList from "../components/task";
 import { getAllTask } from "../api";
 
 const HomeScreen = () => {
-  const { currentThemeColor, currentTask } = useContext(Context);
+  const { currentThemeColor, currentTask, activeTab, setActiveTab } = useContext(Context);
   const [tasks, setTasks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
   const animatedColorRef = useRef(currentThemeColor);
@@ -42,7 +42,6 @@ const HomeScreen = () => {
         setTasks(data);
       });
   }, []);
-  const [activeTab, setActiveTab] = useState(0);
   const [counter, setCounter] = useState(0);
   const getActiveTab = useCallback((data) => setActiveTab(data), []);
   const increaseCounter = useCallback(() => setCounter(counter + 1), [counter]);
@@ -66,7 +65,7 @@ const HomeScreen = () => {
             />
 
             <Stack alignInline="center" flexDirection="row" gap={5}>
-              <Text style={styles.contentText}>#{counter}</Text>
+              <Text style={styles.contentText}>#{counter}  </Text>
               <Text style={styles.contentText}>{currentTask ? currentTask.content : activeTab === 0 ? "Time to focus!" : "Time for a break!"}</Text>
             </Stack>
             <TasksList tasks={tasks} getTasks={getTasks} />

@@ -65,6 +65,7 @@ const Timer = ({
             style={styles.input}
             defaultValue={longBreakInterval.toString()}
             keyboardType="numeric"
+            value={longBreakInterval.toString()}
             onChangeText={(value) => getLongBreakInterval(+value)}
           />
         </View>

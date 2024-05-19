@@ -1,14 +1,15 @@
 import { Audio } from 'expo-av';
-import { set } from 'lodash';
 
 let soundObject = new Audio.Sound();
 
-async function loadSound(soundFile: string, volume: number = 1, loop: boolean = false) {
+async function loadSound(soundFile: string, volume: number = 1) {
   try {
+    if (!soundFile) return;
+    
     await soundObject.unloadAsync(); // Unload any sound that might be loaded
-    await soundObject.loadAsync({ uri: soundFile });
-    await soundObject.setVolumeAsync(volume);
-    await soundObject.setIsLoopingAsync(loop);
+    await soundObject.loadAsync({ uri: soundFile}, {shouldPlay: true, volume: volume, isLooping: true});
+    // await soundObject.setVolumeAsync(volume);
+    // await soundObject.setIsLoopingAsync(true);
     console.log('Sound loaded');
   } catch (error) {
     console.log('Error loading sound', error);
@@ -47,11 +48,10 @@ async function playPreview(source: string, volume: number = 1) {
       if (window['timeoutID']) {
         clearTimeout(window['timeoutID']);
       }
-
-      await loadSound(source, volume, false);
+      await loadSound(source, volume);
       await playSound();
       const timeoutID = setTimeout(async () => {
-        await unloadSound();
+        await pauseSound();
       }, 5000);
       window['timeoutID'] = timeoutID;
     } catch (error) {

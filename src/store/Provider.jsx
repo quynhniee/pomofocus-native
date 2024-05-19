@@ -9,7 +9,7 @@ const SettingProvider = ({ children }) => {
 	const [tabs, setTabs] = useState(tabsDefault);
 	const [currentTask, setCurrentTask] = useState()
 	const [isStarting, setIsStarting] = useState(false);
-
+	const [activeTab, setActiveTab] = useState(tabs.findIndex(tab => tab.isActive === true));
 	const [currentThemeColor, setCurrentThemeColor] = useState(
 		tabs.find(tab => tab.isActive === true).themeColor
 	);
@@ -42,7 +42,9 @@ const SettingProvider = ({ children }) => {
 				currentTask,
 				setCurrentTask,
 				isStarting,
-				setIsStarting
+				setIsStarting,
+				activeTab,
+				setActiveTab
 			}}
 		>
 			{children}
