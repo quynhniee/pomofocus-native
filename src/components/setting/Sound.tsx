@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   Button,
@@ -17,7 +17,7 @@ import Picker from "react-native-picker-select";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { theme } from "../../core/theme";
 import { playPreview } from '../../utils/sound-player';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash'; 
 
 const AlarmSelect = ({
   alarmSound,
@@ -28,6 +28,19 @@ const AlarmSelect = ({
   const [alarms, setAlarms] = useState([]);
   const [selectedAlarm, setSelectedAlarm] = useState(alarmSound);
   const [volume, setVolume] = useState([alarmVolume * 100]); // Default volume
+
+
+  const debouncedPlayPreview = useCallback(
+    debounce(async (selectedAlarm, volume) => {
+      await playPreview(selectedAlarm, volume[0] / 100)
+      console.log(volume)
+    }, 500, { leading: true }),
+    []
+  );
+
+  useEffect(() => {
+    debouncedPlayPreview(selectedAlarm, volume);
+  }, [selectedAlarm, volume]); 
 
   useEffect(() => {
     const fetchAlarms = async () => {
@@ -90,11 +103,13 @@ const TickingSelect = ({
   const [selectedTicking, setSelectedTicking] = useState(tickingSound);
   const [volume, setVolume] = useState([tickingVolume * 100]); // Default volume
 
-
-  const playPreviewSound = async () => {
-    await playPreview(selectedTicking, volume[0] / 100)
-  }
-  const debouncedPlayPreview = debounce(playPreviewSound, 300);
+  const debouncedPlayPreview = useCallback(
+    debounce(async (selectedTicking, volumeData) => {
+      await playPreview(selectedTicking, volumeData[0] / 100)
+      console.log(volumeData)
+    }, 500, { leading: true }),
+    []
+  );
 
   useEffect(() => {
     const fetchTickings = async () => {
@@ -106,8 +121,8 @@ const TickingSelect = ({
   }, []);
 
   useEffect(() => {
-    debouncedPlayPreview();
-  }, [selectedTicking, volume]);
+    debouncedPlayPreview(selectedTicking, volume);
+  }, [selectedTicking, volume]); 
 
 
   return (

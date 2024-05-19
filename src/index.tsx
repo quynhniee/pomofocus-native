@@ -14,8 +14,8 @@ import Context from "./store/Context";
 
 const Stack = createStackNavigator();
 const Router = () => {
-  // axios.defaults.baseURL = "http://10.0.2.2:5001/api/";
-  axios.defaults.baseURL = "http://192.168.1.250:5001/api/";
+  axios.defaults.baseURL = "http://10.0.2.2:5001/api/";
+  // axios.defaults.baseURL = "http://192.168.1.250:5001/api/";
   const dispatch = useDispatch();
   const isAuth = useSelector((state: any) => state?.auth?.isAuth);
   const [token, setToken] = React.useState<string>("");

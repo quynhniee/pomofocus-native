@@ -7,6 +7,11 @@ import store from './src/redux/auth';
 import SettingProvider from './src/store/Provider';
 
 export default function App() { 
+  const error = console.error;
+console.error = (...args) => {
+  if (/defaultProps/.test(args[0])) return;
+  error(...args);
+};
 
   return (
     <Provider store={store}>

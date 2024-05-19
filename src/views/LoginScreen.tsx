@@ -23,13 +23,17 @@ import TextInput from "../components/TextInput";
 import { emailValidator, passwordValidator } from "../utils/validator";
 import { useFocusEffect } from "@react-navigation/native";
 import { login, setHeader } from "../api";
-import  useSnackbar from '../hooks/useSnackbar';
+import useSnackbar from "../hooks/useSnackbar";
+import { Audio } from "expo-av";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import XLSX from "xlsx";
 
 type Props = {
   navigation: Navigation;
 };
 
-const LoginScreen = ({ navigation }: Props) => { 
+const LoginScreen = ({ navigation }: Props) => {
   const { showSnackbar, visible, message, hideSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -65,10 +69,70 @@ const LoginScreen = ({ navigation }: Props) => {
     }
   };
 
-  useEffect(() => {}, []);
+  const [data, setData] = useState(null);
 
+  const handleImport = async () => {
+    // Chọn tệp
+    try {
+      console.log("duong");
+      const res = await DocumentPicker.getDocumentAsync({
+        type: [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.ms-excel",
+        ],
+      });
+      if (res.type === "success") {
+        // Đọc tệp
+        const fileUri = res.uri;
+        const fileContent = await FileSystem.readAsStringAsync(fileUri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        const workbook = XLSX.read(fileContent, { type: "base64" });
+
+        // Chuyển đổi dữ liệu từ Sheet đầu tiên thành JSON
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        // Cập nhật state
+        setData(jsonData);
+        console.log(jsonData)
+      } else if (res.type === "cancel") {
+        console.log("User cancelled the picker");
+      }
+      console.log("res: ", res);
+    } catch (e) {
+      console.log(e);
+    }
+
+    // if (res.type === "success") {
+    //   // Đọc tệp
+    //   const fileUri = res.uri;
+    //   const fileContent = await FileSystem.readAsStringAsync(fileUri, {
+    //     encoding: FileSystem.EncodingType.Base64,
+    //   });
+    //   const workbook = XLSX.read(fileContent, { type: "base64" });
+
+    //   // Chuyển đổi dữ liệu từ Sheet đầu tiên thành JSON
+    //   const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    //   const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+    //   // Cập nhật state
+    //   setData(jsonData);
+    // }
+  };
   return (
     <>
+      <View>
+        <Button onPress={handleImport}>Duong</Button>
+        {data && (
+          <View>
+            {data.map((item, index) => (
+              <Text key={index}>{JSON.stringify(item)}</Text>
+            ))}
+          </View>
+        )}
+      </View>
+
       <Snackbar
         duration={Snackbar.DURATION_SHORT}
         onDismiss={hideSnackbar}
@@ -116,7 +180,7 @@ const LoginScreen = ({ navigation }: Props) => {
             <Text style={styles.label}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
-        
+
         <Stack alignBlock="center" flexDirection="column">
           <Button mode="contained" onPress={_onLoginPressed}>
             Login
