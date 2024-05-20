@@ -19,7 +19,6 @@ function readExcelFile(filePath) {
 const handleImport = async (f: any) => {
   // Chọn tệp
   try {
-    console.log("duong");
     const res:DocumentPicker.DocumentPickerResult = await DocumentPicker.getDocumentAsync({
       type: [
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -27,7 +26,6 @@ const handleImport = async (f: any) => {
       ],
     });
       const uri = res.assets[0].uri
-  
 
         const fileContent = await FileSystem.readAsStringAsync(uri, {
           encoding: FileSystem.EncodingType.Base64,

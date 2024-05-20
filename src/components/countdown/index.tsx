@@ -60,6 +60,8 @@ const CountDownBox = ({
   }, []);
 
   function updateItemAct() {
+    if (!activeItem) return tasks;
+
     let newItem = { ...activeItem, act: activeItem.act + 1 };
     updateTask(activeItem.id, newItem);
     let newTasks = tasks.map((task) =>

@@ -15,7 +15,6 @@ import TaskSetting from "./Task";
 import ThemeSetting from "./Theme";
 import Modal from "../Modal";
 import Stack from "../Stack";
-import useSnackbar from "../../hooks/useSnackbar";
 import Sound from "./Sound";
 import { useDispatch } from 'react-redux';
 import { showSnackbar } from '../../redux/toast';

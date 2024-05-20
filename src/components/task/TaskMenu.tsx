@@ -1,26 +1,23 @@
 import React, { useRef, useState } from "react";
-import { IconButton, Menu, Divider, Snackbar } from "react-native-paper";
+import { IconButton, Menu, Divider } from "react-native-paper";
 import { View } from "react-native";
-import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
-import XLSX from "xlsx";
-import { addTask, deleteTask } from "../../api";
+import { addTask, deleteTask, updateTask } from "../../api";
 import { handleImport } from "../../utils/excel-reader";
-import useSnackbar from "../../hooks/useSnackbar";
 import { useDispatch } from 'react-redux';
 import { showSnackbar } from '../../redux/toast';
 
 const TaskMenu = ({ getTasks, tasks }) => {
-
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const dispatch = useDispatch();
 
-
-  const clearActHandle = () => {
-    const newTasks = tasks.map((t) => ({ ...t, act: 0 }));
+  const clearActHandle = async() => {
+    const newTasks = tasks.map((t) => t.isCompleted ? t : ({ ...t, act: 0 }));
     getTasks(newTasks);
+    newTasks.map(async (t) => {
+      await updateTask(t.id, t);
+    });
     closeMenu();
   };
 
