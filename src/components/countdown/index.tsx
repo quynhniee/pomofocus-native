@@ -141,6 +141,11 @@ const CountDownBox = ({
   }, [activeTab, tabs, tasks]);
 
   useEffect(() => {
+    loadSound(tickingSound, tickingVolume);
+  }, [setting])
+
+
+  useEffect(() => {
     setIsStarting(active);
     if (tickingSound && active === true ) {
       playTickingSound();

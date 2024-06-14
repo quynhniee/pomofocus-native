@@ -12,16 +12,17 @@ import Context from "../store/Context";
 import Stack from "../components/Stack";
 import TasksList from "../components/task";
 import { getAllTask } from "../api";
-import { Snackbar } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
-import { hideSnackbar } from '../redux/toast';
+import { Portal, Snackbar } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { hideSnackbar } from "../redux/toast";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const message = useSelector((state: any) => state.toast.message);
   const toastVisible = useSelector((state: any) => state.toast.visible);
 
-  const { currentThemeColor, currentTask, activeTab, setActiveTab } = useContext(Context);
+  const { currentThemeColor, currentTask, activeTab, setActiveTab } =
+    useContext(Context);
   const [tasks, setTasks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
   const animatedColorRef = useRef(currentThemeColor);
@@ -53,22 +54,24 @@ const HomeScreen = () => {
   const increaseCounter = useCallback(() => setCounter(counter + 1), [counter]);
   const getTasks = useCallback((data) => setTasks(data), []);
 
-
   const hideSnackbarActions = () => {
     dispatch(hideSnackbar());
-  }
+  };
 
   return (
     <>
       <Animated.View style={{ flex: 1, backgroundColor: backgroundColor }}>
-              <Snackbar
-        style={{zIndex: 1000}}
-        duration={Snackbar.DURATION_SHORT}
-        onDismiss={hideSnackbarActions}
-        visible={toastVisible}
+        <Portal>
+          
+        <Snackbar
+          style={{ zIndex: 100 }}
+          duration={Snackbar.DURATION_SHORT}
+          onDismiss={hideSnackbarActions}
+          visible={toastVisible}
         >
-        {message}
+          {message}
         </Snackbar>
+        </Portal>
         <AppHeader />
         <ScrollView style={{ padding: 20 }}>
           <Stack>
@@ -83,8 +86,14 @@ const HomeScreen = () => {
             />
 
             <Stack alignInline="center" flexDirection="row" gap={5}>
-              <Text style={styles.contentText}>#{counter}  </Text>
-              <Text style={styles.contentText}>{currentTask ? currentTask.content : activeTab === 0 ? "Time to focus!" : "Time for a break!"}</Text>
+              <Text style={styles.contentText}>#{counter} </Text>
+              <Text style={styles.contentText}>
+                {currentTask
+                  ? currentTask.content
+                  : activeTab === 0
+                  ? "Time to focus!"
+                  : "Time for a break!"}
+              </Text>
             </Stack>
             <TasksList tasks={tasks} getTasks={getTasks} />
           </Stack>

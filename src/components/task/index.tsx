@@ -21,6 +21,7 @@ const TasksList = ({ tasks, getTasks }) => {
       </View>
       <Divider />
       <FlatList
+        style={{zIndex: 2}}
         scrollEnabled={false}
         data={tasks}
         keyExtractor={(item, index) => index.toString()}

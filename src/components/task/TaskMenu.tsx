@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { IconButton, Menu, Divider } from "react-native-paper";
 import { View } from "react-native";
-import { addTask, deleteTask, updateTask } from "../../api";
+import { addTask, deleteTask, getAllTask, updateTask } from "../../api";
 import { handleImport } from "../../utils/excel-reader";
 import { useDispatch } from 'react-redux';
 import { showSnackbar } from '../../redux/toast';
@@ -45,13 +45,30 @@ const TaskMenu = ({ getTasks, tasks }) => {
   };
 
   const importTasksFromExcelHandle = async (f: any) => {
-    const importedTasks = await handleImport(f);
-    importedTasks.forEach(async (t) => {
-      await addTask(t);
-    })
-    getTasks(tasks.concat(importedTasks));
-    dispatch(showSnackbar("Tasks imported successfully!"));
-    closeMenu();
+    try {
+      const importedTasks = await handleImport(f);
+      const filteredTasks = importedTasks.filter(task => 
+        task.hasOwnProperty('content') && 
+        task.hasOwnProperty('isCompleted') && 
+        task.hasOwnProperty('act') && 
+        task.hasOwnProperty('EP')
+      );
+      filteredTasks.forEach(async (t) => {
+        await addTask(t);
+      })
+
+      await getAllTask()
+      .then((res) => res.data)
+      .then((data) => {
+        getTasks(data);
+      });
+      // getTasks(tasks.concat(filteredTasks));
+      dispatch(showSnackbar("Tasks imported successfully!"));
+      closeMenu();
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   return (

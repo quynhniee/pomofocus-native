@@ -41,6 +41,7 @@ const TaskCreator = ({ getExpand, task, tasks, getTasks }) => {
   const removeHandle =  async () => {
     getTasks(tasks.filter((t) => t.id !== task.id));
     await deleteTask(task.id);
+    getExpand(false);
   };
   return (
     <TouchableWithoutFeedback onPress={() => getExpand(false)} accessible={false}>

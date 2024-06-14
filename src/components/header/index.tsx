@@ -18,7 +18,7 @@ const AppHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS === 'ios' ? 50 : 20,
+    marginTop: Platform.OS === 'ios' ? 30 : 20,
   },
 });
 

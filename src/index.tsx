@@ -12,12 +12,12 @@ import { setHeader } from "./api";
 import axios from "axios";
 import Context from "./store/Context";
 import { Snackbar } from 'react-native-paper';
-import { hideSnackbar as hideSnackbarActions, showSnackbar as  showSnackbarAction } from './redux/toast';
 
 const Stack = createStackNavigator();
 const Router = () => {
-  axios.defaults.baseURL = "http://10.0.2.2:5001/api/";
-  // axios.defaults.baseURL = "http://192.168.1.250:5001/api/";
+  // axios.defaults.baseURL = "http://10.0.2.2:5001/api/";
+  axios.defaults.baseURL = "http://172.20.10.2:5001/api/";
+  // axios.defaults.baseURL = "http://10.21.116.161:5001/api/";
   const dispatch = useDispatch();
   const isAuth = useSelector((state: any) => state?.auth?.isAuth);
   const [token, setToken] = React.useState<string>("");

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, Alert, ScrollView } from "react-native";
+import { View, StyleSheet, Alert, ScrollView, Platform } from "react-native";
 import {
   Switch,
   Text as RNText,
@@ -22,7 +22,7 @@ import { showSnackbar } from '../../redux/toast';
 const SettingButton = () => {
   const dispatch = useDispatch();
 
-  const { setting, setSetting, tabs, setTabs } = useContext(Context);
+  const { setting, setSetting, tabs, setTabs, setIsStarting } = useContext(Context);
 
   const pomodoro = tabs[0],
     shortBreak = tabs[1],
@@ -108,6 +108,7 @@ const SettingButton = () => {
     updateTabsStorage();
     updateSettingStorage();
     setOpen(false);
+    setIsStarting(false)
     dispatch(showSnackbar("Settings saved!"));
   };
 
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   row: {
+    paddingTop: Platform.OS === "ios" ? 30 : 0,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
